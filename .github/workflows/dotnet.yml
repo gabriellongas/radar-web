@@ -10,10 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: Radar.Web/
+
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -23,6 +20,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build Radar.Web.sln --no-restore
+      run: dotnet build ./Radar.Web/Radar.Web.sln --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
