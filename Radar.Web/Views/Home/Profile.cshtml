@@ -1,10 +1,12 @@
-﻿<link rel="stylesheet" href="~/css/profile.css" />
+﻿@model Radar.Web.Models.ViewModels.ProfileViewModel
+
+<link rel="stylesheet" href="~/css/profile.css" />
 
 <div class="row">
     <div class="col-sm-4 p-3">
         <section class="profile d-flex flex-column flex-nowrap align-items-center mb-4">
             <div class="profile-picture mb-2"></div>
-            <h3 class="profile-username">@@UserName</h3>
+            <h3 class="profile-username">@@@Model.Pessoa.Nome</h3>
         </section>
         <section class="description d-sm-flex flex-sm-column flex-sm-nowrap align-items-sm-center mb-sm-4">
             <h2 class="mb-sm-4 mb-2">Description</h2>
@@ -20,78 +22,21 @@
         <section class="posts">
             <h2 class="mb-sm-4 mb-2">Posts</h2>
             <ul>
-                <li class="post">
-                    <article>
-                        <div class="post-header">
-                            <div class="post-picture"></div>
-                            <h4 class="post-username">@@Friend</h4>
-                        </div>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                            ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                            in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                            qui officia deserunt mollit anim id est laborum.
-                        </p>
-                        <p class="datetime">2023-15-10 12:34</p>
-                    </article>                    
-                </li>
-                <li class="post">
-                    <article>
-                        <div class="post-header">
-                            <div class="post-picture"></div>
-                            <h4 class="post-username">@@Friend</h4>
-                        </div>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                            ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                            in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                            qui officia deserunt mollit anim id est laborum.
-                        </p>
-                        <p class="datetime">2023-15-10 12:34</p>
-                    </article>
-                </li>
-                <li class="post">
-                    <article>
-                        <div class="post-header">
-                            <div class="post-picture"></div>
-                            <h4 class="post-username">@@Friend</h4>
-                        </div>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                            ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                            in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                            qui officia deserunt mollit anim id est laborum.
-                        </p>
-                        <p class="datetime">2023-15-10 12:34</p>
-                    </article>
-                </li>
-                <li class="post">
-                    <article>
-                        <div class="post-header">
-                            <div class="post-picture"></div>
-                            <h4 class="post-username">@@Friend</h4>
-                        </div>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                            ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                            in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                            qui officia deserunt mollit anim id est laborum.
-                        </p>
-                        <p class="datetime">2023-15-10 12:34</p>
-                    </article>
-                </li>
+                @foreach(Post post in Model.Posts)
+                {
+                    <li class="post">
+                        <article>
+                            <div class="post-header">
+                                <div class="post-picture"></div>
+                                <h4 class="post-username">@@@post.Pessoa.Nome</h4>
+                            </div>
+                            <p>
+                                @post.Conteudo
+                            </p>
+                            <p class="datetime">@post.DataPostagem.ToString("f")</p>
+                        </article>                    
+                    </li>                    
+                }
             </ul>
         </section>
     </div>
