@@ -28,12 +28,16 @@
                         <article>
                             <div class="post-header">
                                 <div class="post-picture"></div>
-                                <h4 class="post-username">@@@post.Pessoa.Nome</h4>
+                                <div class="post-title">
+                                    <a href=""><p class="post-username">@@Pessoa1</p></a>
+                                    <p>sobre <a href="">@@Lugar1</a></p>
+                                </div>
                             </div>
                             <p>
                                 @post.Conteudo
                             </p>
                             <p class="datetime">@post.DataPostagem.ToString("f")</p>
+                            <i class="post-like fa-solid fa-heart"></i>
                         </article>                    
                     </li>                    
                 }
