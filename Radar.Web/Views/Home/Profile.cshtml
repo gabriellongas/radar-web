@@ -32,12 +32,24 @@
                                     <a href=""><p class="post-username">@@Pessoa1</p></a>
                                     <p>sobre <a href="">@@Lugar1</a></p>
                                 </div>
+                                <div class="post-rate">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                </div>
                             </div>
                             <p>
                                 @post.Conteudo
                             </p>
                             <p class="datetime">@post.DataPostagem.ToString("f")</p>
-                            <i class="post-like fa-solid fa-heart"></i>
+                            <div class="post-reaction">
+                                <div class="post-like">
+                                    <i class="post-like-icon fa-solid fa-heart fa-lg"></i>
+                                    <p class="post-like-counter">@post.Likes</p>
+                                </div>
+                            </div>
                         </article>                    
                     </li>                    
                 }

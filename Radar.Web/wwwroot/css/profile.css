@@ -3,7 +3,7 @@
 }
 
 .profile-picture {
-    background-color: deepskyblue;
+    background-color: #067BC2;
     height: 150px;
     width: 150px;
     border: 2px solid gray;
@@ -21,6 +21,7 @@
     border-radius: 5px;
     margin-bottom: 10px;
     position: static;
+    background-color: #F8F8F8;
 }
 
 .posts .post article {
@@ -62,7 +63,7 @@
 }
 
 .posts .post .post-picture {
-    background-color: deepskyblue;
+    background-color: #067BC2;
     height: 50px;
     width: 50px;
     border: 2px solid gray;
@@ -74,6 +75,16 @@
     font-style: italic;
 }
 
-.posts .post .post-like {
+
+.posts .post .post-reaction {
     color: crimson;
+    display: flex;
+    flex-direction: row;
+}
+
+.posts .post .post-reaction>div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3px;
 }
