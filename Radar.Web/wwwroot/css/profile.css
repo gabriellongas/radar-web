@@ -3,11 +3,16 @@
 }
 
 .profile-picture {
-    background-color: deepskyblue;
+    background-color: #067BC2;
     height: 150px;
     width: 150px;
     border: 2px solid gray;
     border-radius: 50%;
+}
+.profile-settings {
+    position: relative;
+    bottom: 50px;
+    left: 55px;
 }
 
 .posts ul {
@@ -20,25 +25,53 @@
     border: 1px solid lightgray;
     border-radius: 5px;
     margin-bottom: 10px;
+    position: static;
+    background-color: #F8F8F8;
 }
 
 .posts .post article {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
 .posts .post .post-header {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.posts .post .post-title {
+    display: flex;
+    flex-direction: column;
     align-items: start;
     gap: 5px;
+    gap: 0px;
+}
+
+.posts .post .post-title p {
+    font-size: 13px;
+}
+
+.posts .post .post-title .post-username {
+    font-size: 20px;
+}
+
+.posts a,
+.posts a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.posts a:hover {
+    font-weight: bold;
 }
 
 .posts .post .post-picture {
-    background-color: deepskyblue;
-    height: 40px;
-    width: 40px;
+    background-color: #067BC2;
+    height: 50px;
+    width: 50px;
     border: 2px solid gray;
     border-radius: 50%;
 }
@@ -46,4 +79,25 @@
 .posts .post .datetime {
     font-size: 15px;
     font-style: italic;
+}
+
+.posts .post .post-reaction {
+    color: crimson;
+    display: flex;
+    flex-direction: row;
+}
+
+.posts .post .post-reaction > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3px;
+}
+
+.fa-star {
+    color: sandybrown;
+}
+
+.fa-gear {
+    color: rosybrown;
 }
