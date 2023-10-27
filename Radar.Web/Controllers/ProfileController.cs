@@ -8,22 +8,14 @@ namespace Radar.Web.Controllers
 {
     public class ProfileController : Controller
     {
-        private readonly ApiClient ApiClient = new ApiClient();
+        private readonly ApiClient _apiClient = new ApiClient();
 
         public IActionResult Index()
         {
             ProfileViewModel profileViewModel = new ProfileViewModel
             (
-                pessoa: new Pessoa()
-                {
-                    PessoaID = 1,
-                    Nome = "Thainá",
-                    Email = "thaina@gmail.com",
-                    Login = "Thainá",
-                    Senha = "123456",
-                    DataNascimento = DateTimeOffset.Now
-                },
-                posts: ApiClient.GetPosts()
+                pessoa: _apiClient.GetPessoa(1),
+                posts: _apiClient.GetPosts()
             );
             return View(profileViewModel);
         }
