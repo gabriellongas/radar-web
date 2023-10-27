@@ -10,6 +10,93 @@ namespace Radar.Web.Api
         private static readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
 
         #region Pessoa
+        public List<Pessoa> GetPessoa()
+        {
+            try
+            {
+                HttpResponseMessage response = _client.GetAsync("/api/Pessoas").Result;
+                response.EnsureSuccessStatusCode();
+
+                string jsonContent = response.Content.ReadAsStringAsync().Result;
+
+                return JsonSerializer.Deserialize<List<Pessoa>>(jsonContent, _options) ?? new();
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                return new List<Pessoa>();
+            }
+        }
+
+        public Pessoa GetPessoa(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = _client.GetAsync($"/api/Pessoas/{id}").Result;
+                response.EnsureSuccessStatusCode();
+
+                string jsonContent = response.Content.ReadAsStringAsync().Result;
+
+                return JsonSerializer.Deserialize<Pessoa>(jsonContent, _options) ?? new();
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                return new Pessoa();
+            }
+        }
+
+        public bool PostPessoa(Pessoa pessoa)
+        {
+            try
+            {
+                string jsonContent = JsonSerializer.Serialize(pessoa);
+
+                HttpResponseMessage response = _client.PostAsync("/api/Pessoas", new StringContent(jsonContent, Encoding.UTF8, "application/json")).Result;
+                response.EnsureSuccessStatusCode();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                return false;
+            }
+        }
+
+        public bool PutPessoa(Pessoa pessoa)
+        {
+            try
+            {
+                string jsonContent = JsonSerializer.Serialize(pessoa);
+
+                HttpResponseMessage response = _client.PutAsync("/api/Pessoas", new StringContent(jsonContent, Encoding.UTF8, "application/json")).Result;
+                response.EnsureSuccessStatusCode();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                return false;
+            }
+        }
+
+        public bool DeletePessoa(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = _client.DeleteAsync($"/api/Pessoas/{id}").Result;
+                response.EnsureSuccessStatusCode();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                return false;
+            }
+        }
         #endregion
 
         #region Seguidores
