@@ -10,12 +10,9 @@
             <h3 class="profile-username">@@@Model.Pessoa.Nome</h3>
         </section>
         <section class="description d-sm-flex flex-sm-column flex-sm-nowrap align-items-sm-center mb-sm-4">
-            <h2 class="mb-sm-4 mb-2">Description</h2>
+            <h2 class="mb-sm-4 mb-2">Descrição</h2>
             <p class="text-sm-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                ut aliquip ex ea commodo consequat.
+                @Model.Pessoa.Descricao
             </p>
         </section>
     </div>
@@ -30,15 +27,18 @@
                             <div class="post-header">
                                 <div class="post-picture"></div>
                                 <div class="post-title">
-                                    <a href=""><p class="post-username">@@Pessoa1</p></a>
-                                    <p>sobre <a href="">@@Lugar1</a></p>
+                                    <a href=""><p class="post-username">@post.Pessoa.Nome</p></a>
+                                    <p>sobre <a href="">@post.Local.Nome</a></p>
                                 </div>
                                 <div class="post-rate">
-                                    <i class="fa-solid fa-star fa-lg"></i>
-                                    <i class="fa-solid fa-star fa-lg"></i>
-                                    <i class="fa-solid fa-star fa-lg"></i>
-                                    <i class="fa-solid fa-star fa-lg"></i>
-                                    <i class="fa-regular fa-star fa-lg"></i>
+                                    @for(int i = 1; i <= post.Avaliacao; i++)
+                                    {
+                                        @Html.Raw("<i class=\"fa-solid fa-star fa-lg\"></i>");
+                                    }
+                                    @for(int i = post.Avaliacao + 1; i <= 5; i++)
+                                    {
+                                        @Html.Raw("<i class=\"fa-regular fa-star fa-lg\"></i>");
+                                    }
                                 </div>
                             </div>
                             <p>
