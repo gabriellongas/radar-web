@@ -37,16 +37,42 @@
         font-size: 15px;
         font-style: italic;
     }
+.status{
+    display:flex;
+}
+.post-input {
+    width: 60%;
+    height: 80px;
+    border-left: none;
+    border-top: none;
+    border-color: lightgray;
+    margin-left:20%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    outline: 0;
+    resize: none ;
+    overflow-y: hidden;
+    display:inline;
+}
 
- .post-input{
-      width:60%;
-      height:50px;
-      border-left:none;
-      border-top:none;
-      border-right:none;
-      border-color:lightgray;
-      margin-bottom:20px;
-      padding-bottom:0;
-      outline:0;
 
- }
+.btn {
+    height:30px;
+    display:inline;
+    background-color: #067BC2;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    border: none !important;
+    transition: all linear 160ms;
+    cursor: pointer;
+    margin-top:95px;
+    margin-left:20px;
+}
+
+    .btn:hover {
+        transform: scale(1.05);
+        background-color: #067BC2;
+        color: #fff;
+    }
+
