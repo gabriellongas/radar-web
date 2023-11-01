@@ -15,7 +15,7 @@ namespace Radar.Web.Controllers
             ProfileViewModel profileViewModel = new ProfileViewModel
             (
                 pessoa: _apiClient.GetPessoa(1),
-                posts: _apiClient.GetPosts()
+                posts: _apiClient.GetPostsFromPessoa(1)
             );
             return View(profileViewModel);
         }
