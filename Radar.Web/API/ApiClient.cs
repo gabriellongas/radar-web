@@ -123,6 +123,23 @@ namespace Radar.Web.Api
                 return new List<Post>();
             }
         }
+        public List<Post> GetPostsFromPessoa(int pessoaId)
+        {
+            try
+            {
+                HttpResponseMessage response = _client.GetAsync($"/api/Posts/FromPessoa/{pessoaId}").Result;
+                response.EnsureSuccessStatusCode();
+
+                string jsonContent = response.Content.ReadAsStringAsync().Result;
+
+                return JsonSerializer.Deserialize<List<Post>>(jsonContent, _options) ?? new();
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                return new List<Post>();
+            }
+        }
 
         public Post GetPost(int id)
         {
