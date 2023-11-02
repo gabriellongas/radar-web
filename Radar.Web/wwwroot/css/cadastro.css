@@ -100,6 +100,12 @@ form .input-group {
             background: #84bcda;
         }
 
+.field-validation-error {
+    color: palevioletred;
+    padding-left: 15px;
+    font-size: 14px;
+}
+
 @media (max-width:930px) {
     .img-box {
         display: none;
