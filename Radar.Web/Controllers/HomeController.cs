@@ -18,7 +18,7 @@ namespace Radar.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(ApiClient.GetPosts());
         }
 
         public IActionResult Privacy()
