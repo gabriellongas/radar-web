@@ -8,6 +8,6 @@
         public string? Conteudo { get; set; }
         public int Avaliacao { get; set; }
         public DateTimeOffset DataPostagem { get; set; }
-        public int Likes { get; set; }
+        public int Curtidas { get; set; }
     }
 }

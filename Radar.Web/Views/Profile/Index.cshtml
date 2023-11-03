@@ -7,14 +7,12 @@
         <section class="profile d-flex flex-column flex-nowrap align-items-center mb-4">
             <div class="profile-picture mb-2"></div>
             <h3 class="profile-username">@@@Model.Pessoa.Nome</h3>
+            <i class="profile-settings fa-solid fa-gear fa-2x"></i>
         </section>
         <section class="description d-sm-flex flex-sm-column flex-sm-nowrap align-items-sm-center mb-sm-4">
-            <h2 class="mb-sm-4 mb-2">Description</h2>
+            <h2 class="mb-sm-4 mb-2">Descrição</h2>
             <p class="text-sm-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                ut aliquip ex ea commodo consequat.
+                @Model.Pessoa.Descricao
             </p>
         </section>
     </div>
@@ -28,12 +26,31 @@
                         <article>
                             <div class="post-header">
                                 <div class="post-picture"></div>
-                                <h4 class="post-username">@@@post.Pessoa.Nome</h4>
+                                <div class="post-title">
+                                    <a href=""><p class="post-username">@post.Pessoa.Nome</p></a>
+                                    <p>sobre <a href="">@post.Local.Nome</a></p>
+                                </div>
+                                <div class="post-rate">
+                                    @for(int i = 1; i <= post.Avaliacao; i++)
+                                    {
+                                        @Html.Raw("<i class=\"fa-solid fa-star fa-lg\"></i>");
+                                    }
+                                    @for(int i = post.Avaliacao + 1; i <= 5; i++)
+                                    {
+                                        @Html.Raw("<i class=\"fa-regular fa-star fa-lg\"></i>");
+                                    }
+                                </div>
                             </div>
                             <p>
                                 @post.Conteudo
                             </p>
                             <p class="datetime">@post.DataPostagem.ToString("f")</p>
+                            <div class="post-reaction">
+                                <div class="post-like">
+                                    <i class="post-like-icon fa-solid fa-heart fa-lg"></i>
+                                    <p class="post-like-counter">@post.Curtidas</p>
+                                </div>
+                            </div>
                         </article>                    
                     </li>                    
                 }
