@@ -1,3 +1,7 @@
+global using Radar.Web.Models;
+global using Radar.Web.Models.ViewModels;
+global using Radar.Web.Models.Dto;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

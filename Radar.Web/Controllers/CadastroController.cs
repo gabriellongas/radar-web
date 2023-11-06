@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Radar.Web.Api;
-using Radar.Web.Models;
 
 namespace Radar.Web.Controllers
 {

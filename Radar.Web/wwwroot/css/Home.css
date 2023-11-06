@@ -39,25 +39,28 @@
     }
 .status{
     display:flex;
+    flex-direction: column;
+    padding: 0% 20%;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 .post-input {
-    width: 60%;
-    height: 80px;
+    width: 90%;
     border-left: none;
     border-top: none;
+    border-right: none;
     border-color: lightgray;
-    margin-left:20%;
-    margin-top: 50px;
-    margin-bottom: 50px;
     outline: 0;
     resize: none ;
     overflow-y: hidden;
     display:inline;
+    height: 40px;
 }
 
 
 .btn {
-    height:30px;
+    min-width: 30px;
+    height:40px;
     display:inline;
     background-color: #067BC2;
     color: #fff;
@@ -66,8 +69,6 @@
     border: none !important;
     transition: all linear 160ms;
     cursor: pointer;
-    margin-top:95px;
-    margin-left:20px;
 }
 
     .btn:hover {
