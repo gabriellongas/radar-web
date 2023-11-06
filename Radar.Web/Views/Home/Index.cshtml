@@ -1,26 +1,21 @@
-﻿@model List<Post>
-
-
+﻿@model HomeViewModel
 
 <link rel="stylesheet" href="~/css/home.css" />
 
 <div class="text-center">
     <section class="posts">
-        <div class="selecao-local">
-            <select class="selectpicker" data-live-search="true">
-              <option data-tokens="haburgueria">Xapero</option>
-              <option data-tokens="churrasco">Espeto conquista</option>
-              <option data-tokens="açai">Açai Formosa</option>
-            </select>
-
-        </div>
-        <div class="status">
-            <textarea rows="3" maxlength="255" wrap="hard" type="text" class="post-input" placeholder="O que você está pensando?"></textarea>
-            <button class="btn">Publicar</button>
-        </div>
+        <form asp-controller="Home" asp-action="Publish" class="status">
+            <select asp-for="LocalId" asp-items="Model.Locais" class="form-select" data-live-search="true"></select>
+            <div class="d-flex">
+                <textarea asp-for="Conteudo" rows="2" maxlength="255" wrap="hard" type="text" class="post-input" placeholder="O que você está pensando?"></textarea>
+                <span asp-validation-for="Conteudo"></span>
+                <input type="submit" value="Publicar" class="btn" />
+                @Html.HiddenFor(model => model.Avaliacao)
+            </div>
+        </form>
         <h2 class="mb-sm-4 mb-2">Posts</h2>
         <ul>
-            @foreach (Post post in Model)
+            @foreach (Post post in Model.Posts!)
             {
                 <li class="post">
                     <article>

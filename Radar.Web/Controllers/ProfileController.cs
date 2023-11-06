@@ -12,10 +12,14 @@ namespace Radar.Web.Controllers
 
         public IActionResult Index()
         {
-            ProfileViewModel profileViewModel = new ProfileViewModel
-            (
-                pessoa: _apiClient.GetPessoa(1),
-                posts: _apiClient.GetPostsFromPessoa(1)
+            if (LoginController.CurrentUserID == -1)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            ProfileViewModel profileViewModel = new (
+                pessoa: _apiClient.GetPessoa(LoginController.CurrentUserID),
+                posts: _apiClient.GetPostsFromPessoa(LoginController.CurrentUserID)
             );
             return View(profileViewModel);
         }
