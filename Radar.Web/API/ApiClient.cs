@@ -7,7 +7,7 @@ namespace Radar.Web.Api
 {
     public class ApiClient
     {
-        private static readonly HttpClient _client = new() { BaseAddress = new Uri("apiradar-hml.azurewebsites.net") };
+        private static readonly HttpClient _client = new() { BaseAddress = new Uri("https://apiradar-hml.azurewebsites.net") };
         private static readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
         private const string TOKEN = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMTEiLCJleHAiOjE2OTkzNjUwNDd9.NWPi8PivtGIrFDfSYzfNyI80uDbO-d_UKr6LuWWlZ3TBYz4MV6taE0hnYGgUXGRHiAh0OdZ_bvGBVZaX952LtA";
 
