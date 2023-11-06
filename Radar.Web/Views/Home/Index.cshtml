@@ -1,8 +1,35 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model HomeViewModel
+
+<link rel="stylesheet" href="~/css/home.css" />
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Testando deploy.</p>
+    <section class="posts">
+        <form asp-controller="Home" asp-action="Publish" class="status">
+            <select asp-for="LocalId" asp-items="Model.Locais" class="form-select" data-live-search="true"></select>
+            <div class="d-flex">
+                <textarea asp-for="Conteudo" rows="2" maxlength="255" wrap="hard" type="text" class="post-input" placeholder="O que você está pensando?"></textarea>
+                <span asp-validation-for="Conteudo"></span>
+                <input type="submit" value="Publicar" class="btn" />
+                @Html.HiddenFor(model => model.Avaliacao)
+            </div>
+        </form>
+        <h2 class="mb-sm-4 mb-2">Posts</h2>
+        <ul>
+            @foreach (Post post in Model.Posts!)
+            {
+                <li class="post">
+                    <article>
+                        <div class="post-header">
+                            <div class="post-picture"></div>
+                            <h4 class="post-username">@@@post.Pessoa.Nome</h4>
+                        </div>
+                        <p>
+                            @post.Conteudo
+                        </p>
+                        <p class="datetime">@post.DataPostagem.ToString("f")</p>
+                    </article>
+                </li>
+            }
+        </ul>
+    </section>
 </div>

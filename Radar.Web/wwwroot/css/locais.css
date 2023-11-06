@@ -1,0 +1,47 @@
+﻿.profile {
+    padding: 20px 0px;
+}
+
+.profile-picture {
+    background-color: #067BC2;
+    height: 100px;
+    width: 100px;
+    border: 2px solid gray;
+    border-radius: 50%;
+}
+
+.profile-certificate {
+    position: relative;
+    bottom: 75px;
+    left: 45px;
+}
+
+.posts ul {
+    list-style-type: none;
+    padding-inline-start: unset;
+}
+.fa-circle-check {
+    color: #1E90FF;
+}
+
+.fa-star {
+    color: #FFC222;
+    margin-bottom: 10px;
+}
+
+.buscar{
+    border-radius:6px;
+    width:500px;
+}
+.btn-buscar {
+    background-color:#fff;
+    width: 10px;
+    color: #067BC2;
+    font-size: 20px;
+    font-weight: 600;
+    border: none !important;
+    transition: all linear 160ms;
+    cursor: pointer;
+    margin-left: 5px;
+    box-shadow: none !important;
+}
