@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Radar.Web.Api;
-using Radar.Web.Models.ViewModels;
-using Radar.Web.Models;
 using System.Diagnostics;
 
 namespace Radar.Web.Controllers
@@ -10,7 +8,7 @@ namespace Radar.Web.Controllers
     {
         private readonly ApiClient _apiClient = new ApiClient();
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
             if (LoginController.CurrentUserID == -1)
             {
@@ -18,8 +16,8 @@ namespace Radar.Web.Controllers
             }
 
             ProfileViewModel profileViewModel = new (
-                pessoa: _apiClient.GetPessoa(LoginController.CurrentUserID),
-                posts: _apiClient.GetPostsFromPessoa(LoginController.CurrentUserID)
+                pessoa: _apiClient.GetPessoa(id),
+                posts: _apiClient.GetPostsFromPessoa(id)
             );
             return View(profileViewModel);
         }

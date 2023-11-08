@@ -6,7 +6,7 @@
     <div class="post-header">
         <div class="post-picture"></div>
         <div class="post-title">
-            <a href=""><p class="post-username">@Model.Pessoa.Nome</p></a>
+            <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Pessoa.PessoaID"><p class="post-username">@Model.Pessoa.Nome</p></a>
             <p>sobre <a href="">@Model.Local.Nome</a></p>
         </div>
         <div class="post-rate">
