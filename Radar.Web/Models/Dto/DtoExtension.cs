@@ -6,7 +6,7 @@ namespace Radar.Web.Models.Dto;
 public static class DtoExtension
 {
     #region Local
-    public static List<SelectListItem> ToLocalOptions(this List<Local> locais)
+    public static List<SelectListItem> ToSelectListItem(this List<Local> locais)
     {
         List<SelectListItem> localOptions = new();
 
