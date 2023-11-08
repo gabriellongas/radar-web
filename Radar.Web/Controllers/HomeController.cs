@@ -23,9 +23,9 @@ namespace Radar.Web.Controllers
 
             HomeViewModel homeViewModel = new()
             {
-                Locais = _apiClient.GetLocal().ToLocalOptions(),
+                Locais = _apiClient.GetLocal().ToSelectListItem(),
                 Conteudo = "",
-                Posts = _apiClient.GetPosts(),
+                Posts = _apiClient.GetPosts().OrderByDescending(post => post.DataPostagem),
             };
 
 
