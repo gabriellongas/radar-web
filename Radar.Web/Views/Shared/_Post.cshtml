@@ -1,12 +1,10 @@
-﻿@model Post
+﻿@model PostReadDto
 
-<link rel="stylesheet" href="~/css/post.css" />
-
-<article class ="post">
+<article id="@Model.PostId" class="post">
     <div class="post-header">
         <div class="post-picture"></div>
         <div class="post-title">
-            <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Pessoa.PessoaID"><p class="post-username">@Model.Pessoa.Nome</p></a>
+            <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Pessoa.PessoaID" class="post-username">@Model.Pessoa.Nome</a>
             <p>sobre <a href="">@Model.Local.Nome</a></p>
         </div>
         <div class="post-rate">
@@ -27,9 +25,19 @@
     </p>
     <p class="datetime">@Model.DataPostagem.ToString("f")</p>
     <div class="post-reaction">
-        <div class="post-like">
-            <i class="post-like-icon fa-solid fa-heart fa-lg"></i>
-            <p class="post-like-counter">@Model.Curtidas</p>
-        </div>
+        @if (Model.Curtiu)
+        {
+            <a class="post-like" onclick="dislike(@ViewBag.CurrentUserId, @Model.PostId, '@ViewBag.Url', '@ViewBag.Token')">
+                <i class="post-like-icon fa-solid fa-heart fa-lg"></i>
+                <p class="post-like-counter fw-bolder">@Model.Curtidas</p>
+            </a>
+        }
+        else
+        {
+            <a class="post-like" onclick="like(@ViewBag.CurrentUserId, @Model.PostId, '@ViewBag.Url', '@ViewBag.Token')">
+                <i class="post-like-icon fa-regular fa-heart fa-lg"></i>
+                <p class="post-like-counter">@Model.Curtidas</p>
+            </a>
+        }
     </div>
 </article>

@@ -13,11 +13,11 @@
                 @Html.HiddenFor(model => model.Avaliacao)
             </div>
         </form>
-        <h2 class="mb-sm-4 mb-2">Posts</h2>
     </section>
     <section class="posts">
+        <h2 class="mb-sm-4 mb-2">Posts</h2>
         <ul>
-            @foreach (Post post in Model.Posts!)
+            @foreach (PostReadDto post in Model.Posts!)
             {
                 <li>
                     @await Html.PartialAsync("~/Views/Shared/_Post.cshtml", post)
