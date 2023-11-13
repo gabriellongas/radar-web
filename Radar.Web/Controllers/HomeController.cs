@@ -23,11 +23,14 @@ namespace Radar.Web.Controllers
 
             HomeViewModel homeViewModel = new()
             {
-                Locais = _apiClient.GetLocal().ToLocalOptions(),
+                Locais = _apiClient.GetLocal().ToSelectListItem(),
                 Conteudo = "",
-                Posts = _apiClient.GetPosts(),
+                Posts = _apiClient.GetPosts(LoginController.CurrentUserID).OrderByDescending(post => post.DataPostagem),
             };
 
+            ViewBag.CurrentUserId = LoginController.CurrentUserID;
+            ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
+            ViewBag.Token = ApiClient.Token;
 
             return View(homeViewModel);
         }
@@ -39,7 +42,7 @@ namespace Radar.Web.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            post.Posts = _apiClient.GetPosts();
+            post.Posts = _apiClient.GetPosts(LoginController.CurrentUserID);
 
             if (!ModelState.IsValid)
             {

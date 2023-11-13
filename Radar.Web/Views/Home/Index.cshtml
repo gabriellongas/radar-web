@@ -2,8 +2,8 @@
 
 <link rel="stylesheet" href="~/css/home.css" />
 
-<div class="text-center">
-    <section class="posts">
+<div class="content">
+    <section class="publish">
         <form asp-controller="Home" asp-action="Publish" class="status">
             <select asp-for="LocalId" asp-items="Model.Locais" class="form-select" data-live-search="true"></select>
             <div class="d-flex">
@@ -13,21 +13,14 @@
                 @Html.HiddenFor(model => model.Avaliacao)
             </div>
         </form>
+    </section>
+    <section class="posts">
         <h2 class="mb-sm-4 mb-2">Posts</h2>
         <ul>
-            @foreach (Post post in Model.Posts!)
+            @foreach (PostReadDto post in Model.Posts!)
             {
-                <li class="post">
-                    <article>
-                        <div class="post-header">
-                            <div class="post-picture"></div>
-                            <h4 class="post-username">@@@post.Pessoa.Nome</h4>
-                        </div>
-                        <p>
-                            @post.Conteudo
-                        </p>
-                        <p class="datetime">@post.DataPostagem.ToString("f")</p>
-                    </article>
+                <li>
+                    @await Html.PartialAsync("~/Views/Shared/_Post.cshtml", post)
                 </li>
             }
         </ul>
