@@ -14,6 +14,6 @@ namespace Radar.Web.Models.ViewModels
         [Range(1, 5, ErrorMessage = "A avaliação deve ser um número entre 1 e 5")]
         public int? Avaliacao { get; set; }
 
-        public IEnumerable<Post>? Posts { get; set; }
+        public IEnumerable<PostReadDto>? Posts { get; set; }
     }
 }

@@ -1,4 +1,12 @@
-﻿.posts ul {
+﻿.content {
+    padding: 0% 20%;
+}
+
+.publish {
+    margin-bottom: 20px;
+}
+
+.posts ul {
     list-style-type: none;
     padding-inline-start: unset;
 }
@@ -6,13 +14,11 @@
 .status{
     display:flex;
     flex-direction: column;
-    padding: 0% 20%;
     gap: 20px;
-    margin-bottom: 20px;
 }
 
 .post-input {
-    width: 90%;
+    width: 92%;
     border-left: none;
     border-top: none;
     border-right: none;

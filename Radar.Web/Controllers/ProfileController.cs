@@ -17,8 +17,13 @@ namespace Radar.Web.Controllers
 
             ProfileViewModel profileViewModel = new (
                 pessoa: _apiClient.GetPessoa(id),
-                posts: _apiClient.GetPostsFromPessoa(id)
+                posts: _apiClient.GetPostsFromPessoa(LoginController.CurrentUserID, id)
             );
+
+            ViewBag.CurrentUserId = LoginController.CurrentUserID;
+            ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
+            ViewBag.Token = ApiClient.Token;
+
             return View(profileViewModel);
         }
 
