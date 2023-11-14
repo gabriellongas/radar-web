@@ -41,6 +41,12 @@ namespace Radar.Web.Controllers
             }
         }
 
+        public IActionResult SignOut()
+        {
+            CurrentUserID = -1;
+            return RedirectToAction("Index", "Login");
+        }
+
         private static int GetCurrentUserIdFromToken(string token)
         {
             try
