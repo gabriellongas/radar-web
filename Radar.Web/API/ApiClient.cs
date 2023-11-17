@@ -237,6 +237,27 @@ namespace Radar.Web.Api
             }
         }
 
+        public List<PostReadDto> GetPostsFromLocal(int currentUserId, int localId)
+        {
+            try
+            {
+                HttpRequestMessage request = new(HttpMethod.Get, $"{PostPath}/FromLocal/{currentUserId}/{localId}");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+                HttpResponseMessage response = _client.SendAsync(request).Result;
+                response.EnsureSuccessStatusCode();
+
+                string jsonContent = response.Content.ReadAsStringAsync().Result;
+
+                return JsonSerializer.Deserialize<List<PostReadDto>>(jsonContent, _options) ?? new();
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                throw;
+            }
+        }
+
         public PostReadDto GetPost(int currentUserId, int id)
         {
             try
