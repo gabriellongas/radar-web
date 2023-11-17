@@ -5,7 +5,7 @@
         <div class="post-picture"></div>
         <div class="post-title">
             <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Pessoa.PessoaID" class="post-username">@Model.Pessoa.Nome</a>
-            <p>sobre <a href="">@Model.Local.Nome</a></p>
+            <p>sobre <a asp-controller="Locais" asp-action="Index" asp-route-id="@Model.Local.LocalId">@Model.Local.Nome</a></p>
         </div>
         <div class="post-rate">
             @for (int i = 1; i <= Model.Avaliacao; i++)
