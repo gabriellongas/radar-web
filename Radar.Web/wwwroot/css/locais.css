@@ -8,11 +8,9 @@
 
 .place {
     padding: 20px;
-    border: 1px solid lightgray;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     position: static;
-    background-color: #F8F8F8;
     gap: 10px;
 }
 

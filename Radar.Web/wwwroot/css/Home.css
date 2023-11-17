@@ -6,11 +6,6 @@
     margin-bottom: 20px;
 }
 
-.posts ul {
-    list-style-type: none;
-    padding-inline-start: unset;
-}
-
 .status{
     display:flex;
     flex-direction: column;

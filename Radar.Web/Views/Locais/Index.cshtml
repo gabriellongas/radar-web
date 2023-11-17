@@ -1,34 +1,53 @@
-﻿@model LocalReadDto?
+﻿@model LocalViewModel
 
 <link rel="stylesheet" href="~/css/locais.css" />
 
 <div class="content">
     <section class="search">
-        <input class="buscar" placeholder="Buscar" type="text" />
-        <button class="btn-buscar" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i> </button>
+        <form asp-controller="Locais" asp-action="Select" method="get">
+            <input asp-for="@Model.SelectedLocalName" id="selectedLocalName" list="locais" class="buscar" placeholder="Buscar" type="text" />
+            <datalist id="locais">
+                @foreach (var local in Model.Locais)
+                {
+                    <option value="@local.Text">@local.Value</option>
+                }
+            </datalist>
+            <button type="submit" class="btn-buscar" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
     </section>
-    @if(Model != null)
+    @if(Model.SelectedLocal != null)
     {
         <section class="place d-flex flex-sm-row flex-column align-items-sm-start align-items-center">
             <div class="place-logo me-sm-3">
                 <div class="place-picture"></div>
-                @if (Model.Verificado == "Verificado")
+                @if (Model.SelectedLocal.Verificado == "Verificado")
                 {
                     @Html.Raw("<i class=\"place-certificate fa-solid fa-circle-check fa-2x\"></i>")
                     ;
                 }
             </div>
             <div class="place-details">
-                <h3 class="place-name">@Model.Nome</h3>
+                <h3 class="place-name">@Model.SelectedLocal.Nome</h3>
                 <article class="place-address">
                     <h5>Endereço</h5>
-                    <p>@Model.Endereco</p>
+                    <p>@Model.SelectedLocal.Endereco</p>
                 </article>
                 <article class="place-description">
                     <h5>Descrição</h5>
-                    <p>@Model.Descricao</p>
+                    <p>@Model.SelectedLocal.Descricao</p>
                 </article>
             </div>
+        </section>
+        <section class="posts">
+            <h2 class="mb-sm-4 mb-2">Posts</h2>
+            <ul>
+                @foreach (PostReadDto post in Model.Posts)
+                {
+                    <li>
+                        @await Html.PartialAsync("~/Views/Shared/_Post.cshtml", post)
+                    </li>
+                }
+            </ul>
         </section>
     }
 </div>
