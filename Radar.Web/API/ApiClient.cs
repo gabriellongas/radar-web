@@ -1,5 +1,4 @@
-﻿using Radar.Web.Controllers;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -8,7 +7,7 @@ namespace Radar.Web.Api
 {
     public class ApiClient
     {
-        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMTEiLCJleHAiOjE2OTk5NjYyMTF9.Pw06SlvzZl8rcetgwSvkB7sHhtYXtTgYKRA30f3eEwaPG8uyzFWDtbpDa2PWMPc80SEeKpcM-hzcQzMvPBdhsg";
+        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHJhZGFyLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTcwMDIzNzgzNH0.UA-UyUKfuPeN09ti5uF1UKlFVXyUgqL2WeCsvDrhNaI-KpfIM0sUzMM-VPmw8T61wM_X4q8xD2oOGXVtTyMv6w";
         internal static readonly string Origin = "https://localhost:7118";
         private static readonly HttpClient _client = new() { BaseAddress = new Uri(Origin) };
         private static readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
@@ -68,7 +67,7 @@ namespace Radar.Web.Api
             }
         }
 
-        public Pessoa GetPessoa(int id)
+        public PessoaReadDto GetPessoa(int id)
         {
             try
             {
@@ -80,7 +79,7 @@ namespace Radar.Web.Api
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
 
-                return JsonSerializer.Deserialize<Pessoa>(jsonContent, _options) ?? new();
+                return JsonSerializer.Deserialize<PessoaReadDto>(jsonContent, _options) ?? new();
             }
             catch (Exception ex)
             {
@@ -153,7 +152,7 @@ namespace Radar.Web.Api
         #endregion
 
         #region Local
-        public List<Local> GetLocal()
+        public List<LocalReadDto> GetLocal()
         {
             try
             {
@@ -165,7 +164,27 @@ namespace Radar.Web.Api
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
 
-                return JsonSerializer.Deserialize<List<Local>>(jsonContent, _options) ?? new();
+                return JsonSerializer.Deserialize<List<LocalReadDto>>(jsonContent, _options) ?? new();
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                throw;
+            }
+        }
+        public LocalReadDto GetLocal(int id)
+        {
+            try
+            {
+                HttpRequestMessage request = new(HttpMethod.Get, $"{LocalPath}/{id}");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+                HttpResponseMessage response = _client.SendAsync(request).Result;
+                response.EnsureSuccessStatusCode();
+
+                string jsonContent = response.Content.ReadAsStringAsync().Result;
+
+                return JsonSerializer.Deserialize<LocalReadDto>(jsonContent, _options) ?? new();
             }
             catch (Exception ex)
             {

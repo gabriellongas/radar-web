@@ -70,7 +70,7 @@ namespace Radar.Web.Controllers
             }
             catch (Exception)
             {
-                return View("Views/Shared/Error.cshtml");
+                return View("Views/Shared/Error.cshtml", new ErrorViewModel());
             }
         }
 

@@ -15,6 +15,8 @@ namespace Radar.Web.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
+            if (id <= 0) id = LoginController.CurrentUserID;
+
             ProfileViewModel profileViewModel = new (
                 pessoa: _apiClient.GetPessoa(id),
                 posts: _apiClient.GetPostsFromPessoa(LoginController.CurrentUserID, id)
@@ -25,12 +27,6 @@ namespace Radar.Web.Controllers
             ViewBag.Token = ApiClient.Token;
 
             return View(profileViewModel);
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
