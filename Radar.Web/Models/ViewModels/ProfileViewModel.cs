@@ -2,13 +2,8 @@
 {
     public class ProfileViewModel
     {
-        public PessoaReadDto Pessoa { get; set; }
-        public List<PostReadDto> Posts { get; set; }
-
-        public ProfileViewModel(PessoaReadDto pessoa, List<PostReadDto> posts)
-        {
-            this.Pessoa = pessoa;
-            this.Posts = posts;
-        }
+        public PessoaReadDto Pessoa { get; set; } = null!;
+        public List<PostReadDto> Posts { get; set; } = null!;
+        public bool IsMe { get; set; }
     }
 }
