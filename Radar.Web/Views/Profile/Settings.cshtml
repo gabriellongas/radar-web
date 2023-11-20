@@ -1,0 +1,61 @@
+﻿@model SettingsViewModel
+
+<link rel="stylesheet" href="~/css/settings.css" />
+
+<div class="row">
+    <div class="col-sm-4 p-3">
+        <section class="profile d-flex flex-column flex-nowrap align-items-center mb-4">
+            <div class="profile-picture mb-2"></div>
+            <h3 class="profile-username">@Model.Pessoa.Nome</h3>
+        </section>
+        <section class="description d-sm-flex flex-sm-column flex-sm-nowrap align-items-sm-center mb-sm-4">
+            <h4 class="mb-sm-4 mb-2">Descrição</h4>
+            <p class="text-sm-center">
+                @Model.Pessoa.Descricao
+            </p>
+        </section>
+    </div>
+    <div class="col-sm-8 p-3">
+        <section class="settings">
+            <h3 class="mb-3">Configuração</h3>
+            <form asp-action="Edit" method="post" class="form">
+                <div class="mb-3">
+                    <label asp-for="Settings.Email" class="form-label"></label>
+                    <input asp-for="Settings.Email" class="form-control"/>
+                    <span asp-validation-for="Settings.Email"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Settings.Nome" class="form-label"></label>
+                    <input asp-for="Settings.Nome" class="form-control"/>
+                    <span asp-validation-for="Settings.Nome"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Settings.Descricao" class="form-label"></label>
+                    <textarea asp-for="Settings.Descricao" class="form-control" rows="3" ></textarea>
+                    <span asp-validation-for="Settings.Descricao"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Settings.Login" class="form-label"></label>
+                    <input asp-for="Settings.Login" class="form-control"/>
+                    <span asp-validation-for="Settings.Login"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Settings.Senha" class="form-label"></label>
+                    <input asp-for="Settings.Senha" class="form-control"/>
+                    <span asp-validation-for="Settings.Senha"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Settings.NewPassword" class="form-label"></label>
+                    <input asp-for="Settings.NewPassword" class="form-control" />
+                    <span asp-validation-for="Settings.NewPassword"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Settings.ConfirmPassword" class="form-label"></label>
+                    <input asp-for="Settings.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="Settings.ConfirmPassword"></span>
+                </div>
+                <input type="submit" value="Salvar" />
+            </form>
+        </section>
+    </div>
+</div>
