@@ -7,10 +7,13 @@
         <section class="profile d-flex flex-column flex-nowrap align-items-center mb-4">
             <div class="profile-picture mb-2"></div>
             <h3 class="profile-username">@@@Model.Pessoa.Nome</h3>
-            <i class="profile-settings fa-solid fa-gear fa-2x"></i>
+            @if (Model.IsMe)
+            {
+                <a asp-action="Settings"><i class="profile-settings fa-solid fa-gear fa-2x"></i></a>
+            }
         </section>
         <section class="description d-sm-flex flex-sm-column flex-sm-nowrap align-items-sm-center mb-sm-4">
-            <h2 class="mb-sm-4 mb-2">Descrição</h2>
+            <h4 class="mb-sm-4 mb-2">Descrição</h4>
             <p class="text-sm-center">
                 @Model.Pessoa.Descricao
             </p>

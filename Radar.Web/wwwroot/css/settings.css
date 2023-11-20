@@ -1,0 +1,23 @@
+﻿.profile {
+    padding: 20px 0px;
+}
+
+.profile-picture {
+    background-color: #067BC2;
+    height: 150px;
+    width: 150px;
+    border: 2px solid gray;
+    border-radius: 50%;
+}
+
+.form {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 50vw;
+}
+
+.field-validation-error {
+    color: palevioletred;
+    font-size: 14px;
+}

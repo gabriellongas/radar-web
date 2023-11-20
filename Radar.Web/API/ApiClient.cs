@@ -7,7 +7,7 @@ namespace Radar.Web.Api
 {
     public class ApiClient
     {
-        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHJhZGFyLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTcwMDIzNzgzNH0.UA-UyUKfuPeN09ti5uF1UKlFVXyUgqL2WeCsvDrhNaI-KpfIM0sUzMM-VPmw8T61wM_X4q8xD2oOGXVtTyMv6w";
+        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHJhZGFyLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTcwMDU3NTQ4Nn0.zviEao73DeUKb75WK8ZlemgbwUfo-4Fpa-tpPRA3X5_UF0vfWzGXsO8e3rGw-u2vdd2WGnfImZv31kmEIUR0uw";
         internal static readonly string Origin = "https://localhost:7118";
         private static readonly HttpClient _client = new() { BaseAddress = new Uri(Origin) };
         private static readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
@@ -44,6 +44,55 @@ namespace Radar.Web.Api
                 File.AppendAllLines("log.txt", new List<string> { ex.Message });
                 throw;
             }
+        }
+
+        public bool ValidatePassword(PessoaLoginDto login)
+        {
+            try
+            {
+                HttpRequestMessage request = new(HttpMethod.Post, $"{PessoaPath}/ValidatePassword");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Content = new StringContent(JsonSerializer.Serialize(login), Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = _client.SendAsync(request).Result;
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new UnauthorizedAccessException();
+
+                response.EnsureSuccessStatusCode();
+
+                bool isValid = JsonSerializer.Deserialize<bool>(response.Content.ReadAsStringAsync().Result, _options);
+
+                return isValid;
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                throw;
+            }
+        }
+
+        public void UpdatePassword(UpdatePasswordDto updatePassword)
+        {
+            try
+            {
+                HttpRequestMessage request = new(HttpMethod.Put, $"{PessoaPath}/UpdatePassword");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Content = new StringContent(JsonSerializer.Serialize(updatePassword), Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = _client.SendAsync(request).Result;
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    throw new UnauthorizedAccessException();
+
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                throw;
+            }
+
         }
 
         public List<Pessoa> GetPessoa()
@@ -108,11 +157,11 @@ namespace Radar.Web.Api
             }
         }
 
-        public bool PutPessoa(Pessoa pessoa)
+        public bool PutPessoa(PessoaUpdateDto pessoa)
         {
             try
             {
-                HttpRequestMessage request = new(HttpMethod.Put, PessoaPath);
+                HttpRequestMessage request = new(HttpMethod.Put, $"{PessoaPath}/{pessoa.PessoaId}");
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                 request.Content = new StringContent(JsonSerializer.Serialize(pessoa), Encoding.UTF8, "application/json");
 

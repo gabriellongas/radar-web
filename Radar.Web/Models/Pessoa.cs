@@ -24,7 +24,7 @@ namespace Radar.Web.Models
         [DataType(DataType.Password)]
         public string Senha { get; set; } = null!;
 
-        public string Descricao { get; set; } = string.Empty;
+        public string? Descricao { get; set; }
 
         [Required(ErrorMessage = "A data de nascimento deve ser preenchida")]
         [DataType(DataType.Date, ErrorMessage = "A data deve ser válida")]
