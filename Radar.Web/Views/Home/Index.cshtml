@@ -2,15 +2,16 @@
 
 <link rel="stylesheet" href="~/css/home.css" />
 
+@await Html.PartialAsync("~/Views/Home/PublishPopup.cshtml", Model)
+
 <div class="content">
     <section class="publish">
         <form asp-controller="Home" asp-action="Publish" class="status">
-            <select asp-for="LocalId" asp-items="Model.Locais" class="form-select" data-live-search="true"></select>
             <div class="d-flex">
-                <textarea asp-for="Conteudo" rows="2" maxlength="255" wrap="hard" type="text" class="post-input" placeholder="O que você está pensando?"></textarea>
-                <span asp-validation-for="Conteudo"></span>
-                <input type="submit" value="Publicar" class="btn" />
-                @Html.HiddenFor(model => model.Avaliacao)
+                <textarea id="post-content" rows="2" maxlength="255" wrap="hard" type="text" class="post-input" placeholder="O que você está pensando?"></textarea>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#review-modal">
+                    Postar
+                </button>
             </div>
         </form>
     </section>
@@ -26,3 +27,5 @@
         </ul>
     </section>
 </div>
+
+<script src="~/js/home.js"></script>
