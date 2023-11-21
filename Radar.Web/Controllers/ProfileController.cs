@@ -19,7 +19,7 @@ namespace Radar.Web.Controllers
             ProfileViewModel profileViewModel = new()
             {
                 Pessoa = _apiClient.GetPessoa(id),
-                Posts = _apiClient.GetPostsFromPessoa(LoginController.CurrentUserID, id),
+                Posts = _apiClient.GetPostsFromPessoa(LoginController.CurrentUserID, id).OrderByDescending(post => post.DataPostagem),
                 IsMe = id == LoginController.CurrentUserID
             };
 

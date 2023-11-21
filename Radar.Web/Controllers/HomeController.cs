@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Radar.Web.Api;
-using Radar.Web.Models.ViewModels;
 
 namespace Radar.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ApiClient _apiClient = new ApiClient();
+        private readonly ApiClient _apiClient;
+        private readonly List<LocalReadDto> _locais;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            _logger = logger;
+            _apiClient = new ApiClient();
+            _locais = _apiClient.GetLocal();
         }
 
         public IActionResult Index()
@@ -23,8 +23,10 @@ namespace Radar.Web.Controllers
 
             HomeViewModel homeViewModel = new()
             {
-                Locais = _apiClient.GetLocal().ToSelectListItem(),
-                Conteudo = "",
+                Review = new PublishPopupViewModel()
+                {
+                    Locais = _locais.ToSelectListItem()
+                },
                 Posts = _apiClient.GetPosts(LoginController.CurrentUserID).OrderByDescending(post => post.DataPostagem),
             };
 
@@ -49,13 +51,15 @@ namespace Radar.Web.Controllers
                 return View("Index", post);
             }
 
+            LocalReadDto selectedLocal = _locais.Single(local => local.Nome == post.Review.SelectedLocalName);
+
             PostCreateDto postCreateDto = new()
             {
-                LocalId = (int)post.LocalId!,
+                LocalId = selectedLocal.LocalId,
                 PessoaId = LoginController.CurrentUserID,
-                Conteudo = post.Conteudo!,
+                Conteudo = post.Review.Conteudo!,
                 DataPostagem = DateTimeOffset.Now.DateTime,
-                Avaliacao = new Random().Next(0, 6)
+                Avaliacao = post.Review.Avaliacao!.Value
             };
 
             try { 
