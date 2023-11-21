@@ -30,13 +30,13 @@ namespace Radar.Web.Controllers
                 {
                     localViewModel.SelectedLocalName = null;
                     localViewModel.SelectedLocal = null;
-                    localViewModel.Posts = new();
+                    localViewModel.Posts = new List<PostReadDto>();
                     return View(localViewModel);
                 }
                 
                 localViewModel.SelectedLocal = _apiClient.GetLocal(id);
                 localViewModel.SelectedLocalName = localViewModel.SelectedLocal.Nome;
-                localViewModel.Posts = _apiClient.GetPostsFromLocal(LoginController.CurrentUserID, id);
+                localViewModel.Posts = _apiClient.GetPostsFromLocal(LoginController.CurrentUserID, id).OrderByDescending(post => post.DataPostagem);
 
                 return View(localViewModel);
 
