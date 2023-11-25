@@ -2,20 +2,22 @@
 
 <article id="@Model.PostId" class="post">
     <div class="post-header">
-        <div class="post-picture"></div>
-        <div class="post-title">
-            <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Pessoa.PessoaID" class="post-username">@Model.Pessoa.Nome</a>
-            <p>sobre <a asp-controller="Locais" asp-action="Index" asp-route-id="@Model.Local.LocalId">@Model.Local.Nome</a></p>
+        <div class="d-inline-flex me-3">
+            <div class="post-picture"></div>
+            <div class="post-title">
+                <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.Pessoa.PessoaID" class="post-username">@Model.Pessoa.Nome</a>
+                <p>sobre <a asp-controller="Locais" asp-action="Index" asp-route-id="@Model.Local.LocalId">@Model.Local.Nome</a></p>
+            </div>
         </div>
         <div class="post-rate">
             @for (int i = 1; i <= Model.Avaliacao; i++)
             {
-                @Html.Raw("<i class=\"fa-solid fa-star fa-lg\"></i>")
+                @Html.Raw("<i class=\"fa-solid fa-star fa-md\"></i>")
                 ;
             }
             @for (int i = Model.Avaliacao + 1; i <= 5; i++)
             {
-                @Html.Raw("<i class=\"fa-regular fa-star fa-lg\"></i>")
+                @Html.Raw("<i class=\"fa-regular fa-star fa-md\"></i>")
                 ;
             }
         </div>
