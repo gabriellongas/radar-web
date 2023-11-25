@@ -11,7 +11,7 @@ namespace Radar.Web.Controllers
             return View();
         }
 
-        public IActionResult Register(Pessoa pessoa)
+        public IActionResult Register(PessoaCreateDto pessoa)
         {
             if (!ModelState.IsValid)
             {

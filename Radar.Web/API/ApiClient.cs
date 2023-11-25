@@ -7,7 +7,7 @@ namespace Radar.Web.Api
 {
     public class ApiClient
     {
-        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHJhZGFyLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTcwMDkyOTMwOH0.R0oj3h0uL9VnZQO92FFEMiPPdhSFbvnFWdMW0lFDjD-im17uAZseqcNfEPXgkS5LKyafuH8SPCtDyve8BHCvmg";
+        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHJhZGFyLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTcwMTAzMDUyN30.9j7qadoJ4yWl4ncH6X9UjErPgRV1N54kzRGcVzdm992XD5rVxbmUHKV2UvcP_adt-LwfC1WkHv2wd8tYrYytKw";
         internal static readonly string Origin = "https://radar-web-api.azurewebsites.net";
         private static readonly HttpClient _client = new() { BaseAddress = new Uri(Origin) };
         private static readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
@@ -137,7 +137,7 @@ namespace Radar.Web.Api
             }
         }
 
-        public bool PostPessoa(Pessoa pessoa)
+        public bool PostPessoa(PessoaCreateDto pessoa)
         {
             try
             {
