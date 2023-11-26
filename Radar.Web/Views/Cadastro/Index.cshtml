@@ -1,4 +1,4 @@
-﻿@model Pessoa
+﻿@model PessoaCreateDto
 @{
     Layout = null;
 }
@@ -52,6 +52,7 @@
                     <button>Cadastrar</button>
                 </div>
 
+                @Html.ValidationMessage("Error")
             </form>
         </div>
     </div>

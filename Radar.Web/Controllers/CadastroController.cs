@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Radar.Web.Api;
+using System.Net;
 
 namespace Radar.Web.Controllers
 {
@@ -13,17 +14,33 @@ namespace Radar.Web.Controllers
 
         public IActionResult Register(PessoaCreateDto pessoa)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View("Views/Cadastro/Index.cshtml", pessoa);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return View("Views/Cadastro/Index.cshtml", pessoa);
+                }
 
-            if (!_apiClient.PostPessoa(pessoa))
+                _apiClient.PostPessoa(pessoa);
+
+                return View("Views/Login/Index.cshtml");
+            }
+            catch (HttpRequestException exception)
             {
-                return View("Views/Shared/Error.cshtml");
-            }
+                if (exception.StatusCode == HttpStatusCode.Conflict)
+                {
+                    ModelState.AddModelError("Error", "Já existe um usuário com esse login ou e-mail");
+                    return View("Index", pessoa);
+                }
 
-            return View("Views/Login/Index.cshtml");
+                ModelState.AddModelError("Error", "Ocorreu um erro inesperado");
+                return View("Index", pessoa);
+            }
+            catch (System.Exception)
+            {
+                ModelState.AddModelError("Error", "Ocorreu um erro inesperado");
+                return View("Index", pessoa);
+            }
         }
     }
 }

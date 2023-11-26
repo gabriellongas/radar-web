@@ -27,11 +27,9 @@
                 <span asp-validation-for="Senha"></span>
             </div>
             <div class="input-group">
-                <a href="/RecuperarSenha/Index">Esqueci minha senha</a>
                 <input type="submit" value="Acessar" class="btn" />
                 <a href="/Cadastro/Index">Criar conta</a>
             </div>
-            @Html.ValidationMessage("Unauthorized")
             @Html.ValidationMessage("Error")
         </form>
     </div>
