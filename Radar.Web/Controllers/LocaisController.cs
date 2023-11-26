@@ -24,6 +24,10 @@ namespace Radar.Web.Controllers
                     return RedirectToAction("Index", "Login");
                 }
 
+                ViewBag.CurrentUserId = LoginController.CurrentUserID;
+                ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
+                ViewBag.Token = ApiClient.Token;
+
                 LocalViewModel localViewModel = new();
                 localViewModel.Locais = _locais.ToSelectListItem();
 
@@ -83,6 +87,11 @@ namespace Radar.Web.Controllers
                     ModelState.AddModelError("Error", "Local não encontrado");
                     LocalViewModel localViewModel = new();
                     localViewModel.Locais = _locais.ToSelectListItem();
+
+                    ViewBag.CurrentUserId = LoginController.CurrentUserID;
+                    ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
+                    ViewBag.Token = ApiClient.Token;
+                    
                     return View("Index", localViewModel);
                 }
 
