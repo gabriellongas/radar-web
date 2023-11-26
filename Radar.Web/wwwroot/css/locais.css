@@ -1,38 +1,58 @@
-﻿.profile {
-    padding: 20px 0px;
+﻿.content {
+    padding: 0% 20%;
 }
 
-.profile-picture {
+@media (max-width: 768px) {
+    .content {
+        padding: 0% 10%;
+    }
+}
+
+@media (max-width: 576px) {
+    .content {
+        padding: 0% 5%;
+    }
+}
+
+.search {
+    margin-bottom: 20px;
+}
+
+.place {
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    position: static;
+    gap: 10px;
+}
+
+.place-picture {
     background-color: #067BC2;
-    height: 100px;
-    width: 100px;
+    height: 125px;
+    width: 125px;
     border: 2px solid gray;
     border-radius: 50%;
 }
 
-.profile-certificate {
+.place-certificate {
     position: relative;
-    bottom: 75px;
-    left: 45px;
+    bottom: 45px;
+    left: 90px;
+    color: goldenrod;
 }
 
-.posts ul {
-    list-style-type: none;
-    padding-inline-start: unset;
-}
-.fa-circle-check {
-    color: #1E90FF;
-}
-
-.fa-star {
-    color: #FFC222;
-    margin-bottom: 10px;
+.place-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .buscar{
-    border-radius:6px;
-    width:500px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    width: calc(100% - 30px);
 }
+
 .btn-buscar {
     background-color:#fff;
     width: 10px;

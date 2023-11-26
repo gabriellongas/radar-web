@@ -1,4 +1,4 @@
-﻿@model Radar.Web.Models.ViewModels.ProfileViewModel
+﻿@model ProfileViewModel
 
 <link rel="stylesheet" href="~/css/profile.css" />
 
@@ -7,10 +7,13 @@
         <section class="profile d-flex flex-column flex-nowrap align-items-center mb-4">
             <div class="profile-picture mb-2"></div>
             <h3 class="profile-username">@@@Model.Pessoa.Nome</h3>
-            <i class="profile-settings fa-solid fa-gear fa-2x"></i>
+            @if (Model.IsMe)
+            {
+                <a asp-action="Settings"><i class="profile-settings fa-solid fa-gear fa-2x"></i></a>
+            }
         </section>
         <section class="description d-sm-flex flex-sm-column flex-sm-nowrap align-items-sm-center mb-sm-4">
-            <h2 class="mb-sm-4 mb-2">Descrição</h2>
+            <h4 class="mb-sm-4 mb-2">Descrição</h4>
             <p class="text-sm-center">
                 @Model.Pessoa.Descricao
             </p>
@@ -20,39 +23,11 @@
         <section class="posts">
             <h2 class="mb-sm-4 mb-2">Posts</h2>
             <ul>
-                @foreach(Post post in Model.Posts)
+                @foreach(PostReadDto post in Model.Posts)
                 {
-                    <li class="post">
-                        <article>
-                            <div class="post-header">
-                                <div class="post-picture"></div>
-                                <div class="post-title">
-                                    <a href=""><p class="post-username">@post.Pessoa.Nome</p></a>
-                                    <p>sobre <a href="">@post.Local.Nome</a></p>
-                                </div>
-                                <div class="post-rate">
-                                    @for(int i = 1; i <= post.Avaliacao; i++)
-                                    {
-                                        @Html.Raw("<i class=\"fa-solid fa-star fa-lg\"></i>");
-                                    }
-                                    @for(int i = post.Avaliacao + 1; i <= 5; i++)
-                                    {
-                                        @Html.Raw("<i class=\"fa-regular fa-star fa-lg\"></i>");
-                                    }
-                                </div>
-                            </div>
-                            <p>
-                                @post.Conteudo
-                            </p>
-                            <p class="datetime">@post.DataPostagem.ToString("f")</p>
-                            <div class="post-reaction">
-                                <div class="post-like">
-                                    <i class="post-like-icon fa-solid fa-heart fa-lg"></i>
-                                    <p class="post-like-counter">@post.Curtidas</p>
-                                </div>
-                            </div>
-                        </article>                    
-                    </li>                    
+                    <li>
+                        @await Html.PartialAsync("~/Views/Shared/_Post.cshtml", post)
+                    </li>               
                 }
             </ul>
         </section>

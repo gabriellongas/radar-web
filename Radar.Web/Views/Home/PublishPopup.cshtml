@@ -1,0 +1,38 @@
+﻿@model HomeViewModel
+
+<div class="modal modal-md fade" id="review-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Publish" asp-controller="Home" method="post">
+                    <div class="mb-3 d-flex">
+                        <div class="w-100 me-3">
+                            <label asp-for="Review.SelectedLocalName"></label>
+                            <input asp-for="Review.SelectedLocalName" id="selectedLocalName" list="locais" class="form-control" placeholder="Buscar" type="text" />
+                            <datalist id="locais">
+                                @foreach (var local in Model.Review.Locais)
+                                {
+                                    <option value="@local.Text">@local.Value</option>
+                                }
+                            </datalist>
+                        </div>
+                        <div class="w-100">
+                            <label asp-for="Review.Avaliacao"></label>
+                            <input id="rating" asp-for="Review.Avaliacao" class="form-control" min="1" max="5" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Review.Conteudo"></label>
+                        <textarea id="conteudo" asp-for="Review.Conteudo" rows="2" maxlength="255" wrap="hard" type="text" class="form-control"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" title="Enviar">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

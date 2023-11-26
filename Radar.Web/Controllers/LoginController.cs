@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Radar.Web.Api;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Radar.Web.Controllers
 {
@@ -39,6 +39,12 @@ namespace Radar.Web.Controllers
                 ModelState.AddModelError("Error", "Ocorreu um erro inesperado");
                 return View("Index", signIn);
             }
+        }
+
+        public IActionResult SignOut()
+        {
+            CurrentUserID = -1;
+            return RedirectToAction("Index", "Login");
         }
 
         private static int GetCurrentUserIdFromToken(string token)

@@ -1,41 +1,53 @@
-﻿
+﻿@model LocalViewModel
 
 <link rel="stylesheet" href="~/css/locais.css" />
-<div class="flex-row">
-    <div class="row justify-content-center">
-        <div class="col-sm-4 p-3 text-center">
-            <section class="description d-flex align-items-center mb-6">
-                <input class="buscar" placeholder="Buscar"/>
-                <button class="btn-buscar"><i class="fa-solid fa-magnifying-glass ml-2"></i> </button>
-            </section>
-        </div>
-    </div>
-</div>
-<div class="flex-row">
-    <div class="row">
-        <div class="col-sm-3 p-3">
-            <section class="profile d-flex flex-column flex-nowrap align-items-center mb-4">
-                <div class="profile-picture mb-2"></div>
-                <h3 class="profile-username">Habbib´s</h3>
-                <i class="profile-certificate fa-solid fa-circle-check fa-2x"></i>
-            </section>
-        </div>
-        <div class="col-sm-6 p-3 align-items-left">
-            <section class="description d-flex flex-column flex-nowrap mb-4">
-                <h2 class="mb-2 text-center">informações do local</h2>
-                <i class="fa-solid fa-star fa-lg"></i>
-                <h5 class="label mb-0">Endereço:</h5>
-                <p class="mb-2">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                </p>
-                <h5 class="label mb-0">Descrição:</h5>
-                <p class="mb-2">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-            </section>
-        </div>
-    </div>
+
+<div class="content">
+    <section class="search">
+        <form asp-controller="Locais" asp-action="Select" method="get">
+            <input asp-for="@Model.SelectedLocalName" id="selectedLocalName" list="locais" class="buscar" placeholder="Buscar" type="text" />
+            <datalist id="locais">
+                @foreach (var local in Model.Locais)
+                {
+                    <option value="@local.Text">@local.Value</option>
+                }
+            </datalist>
+            <button type="submit" class="btn-buscar" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </section>
+    @if(Model.SelectedLocal != null)
+    {
+        <section class="place d-flex flex-sm-row flex-column align-items-sm-start align-items-center">
+            <div class="place-logo me-sm-3">
+                <div class="place-picture"></div>
+                @if (Model.SelectedLocal.Verificado == "Verificado")
+                {
+                    @Html.Raw("<i class=\"place-certificate fa-solid fa-circle-check fa-2x\"></i>")
+                    ;
+                }
+            </div>
+            <div class="place-details">
+                <h3 class="place-name">@Model.SelectedLocal.Nome</h3>
+                <article class="place-address">
+                    <h5>Endereço</h5>
+                    <p>@Model.SelectedLocal.Endereco</p>
+                </article>
+                <article class="place-description">
+                    <h5>Descrição</h5>
+                    <p>@Model.SelectedLocal.Descricao</p>
+                </article>
+            </div>
+        </section>
+        <section class="posts">
+            <h2 class="mb-sm-4 mb-2">Posts</h2>
+            <ul>
+                @foreach (PostReadDto post in Model.Posts)
+                {
+                    <li>
+                        @await Html.PartialAsync("~/Views/Shared/_Post.cshtml", post)
+                    </li>
+                }
+            </ul>
+        </section>
+    }
 </div>

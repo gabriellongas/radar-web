@@ -10,17 +10,14 @@
     border-radius: 50%;
 }
 
-.profile-settings {
-    position: relative;
-    bottom: 75px;
-    left: 55px;
+.form {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 100%;
 }
 
-.posts ul {
-    list-style-type: none;
-    padding-inline-start: unset;
-}
-
-.fa-gear {
-    color: rosybrown;
+.field-validation-error {
+    color: palevioletred;
+    font-size: 14px;
 }
