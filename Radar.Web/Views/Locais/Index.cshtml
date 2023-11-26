@@ -1,7 +1,7 @@
 ﻿@model LocalViewModel
 
 <link rel="stylesheet" href="~/css/locais.css" />
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
 <div class="content">
     <section class="search">
         <form asp-controller="Locais" asp-action="Select" method="get">
@@ -37,6 +37,11 @@
                     <h5>Descrição</h5>
                     <p>@Model.SelectedLocal.Descricao</p>
                 </article>
+                <div class="chart">
+                    <h1>Quantidade de decibéis</h1>
+                    <canvas id="plots" style="width:100%;max-width:1000px"></canvas>
+                    <script src="~/js/chart.js"></script>
+                </div>
             </div>
         </section>
         <section class="posts">
