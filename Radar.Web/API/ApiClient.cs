@@ -7,8 +7,8 @@ namespace Radar.Web.Api
 {
     public class ApiClient
     {
-        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHJhZGFyLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTcwMTAzMDUyN30.9j7qadoJ4yWl4ncH6X9UjErPgRV1N54kzRGcVzdm992XD5rVxbmUHKV2UvcP_adt-LwfC1WkHv2wd8tYrYytKw";
-        internal static readonly string Origin = "https://radar-web-api.azurewebsites.net";
+        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHJhZGFyLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTcwMTA5NjI2MH0.T8cBBxDEFaZ_Jvp9I_WnmGlWbaR3PJ6dJO9xvwsCWBNdt_UzZKLHVO8K8D8bvUwByyh1tI0zrUoBW9yYav6iaw";
+        internal static readonly string Origin = "https://radar-web-api.azurewebsites.net/";
         private static readonly HttpClient _client = new() { BaseAddress = new Uri(Origin) };
         private static readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
 
@@ -137,7 +137,7 @@ namespace Radar.Web.Api
             }
         }
 
-        public bool PostPessoa(PessoaCreateDto pessoa)
+        public void PostPessoa(PessoaCreateDto pessoa)
         {
             try
             {
@@ -146,9 +146,8 @@ namespace Radar.Web.Api
                 request.Content = new StringContent(JsonSerializer.Serialize(pessoa), Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = _client.SendAsync(request).Result;
-                response.EnsureSuccessStatusCode();
 
-                return true;
+                response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)
             {
