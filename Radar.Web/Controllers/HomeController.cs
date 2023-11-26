@@ -16,53 +16,60 @@ namespace Radar.Web.Controllers
 
         public IActionResult Index()
         {
-            if (LoginController.CurrentUserID == -1)
+            try
             {
-                return RedirectToAction("Index", "Login");
-            }
-
-            HomeViewModel homeViewModel = new()
-            {
-                Review = new PublishPopupViewModel()
+                if (LoginController.CurrentUserID == -1)
                 {
-                    Locais = _locais.ToSelectListItem()
-                },
-                Posts = _apiClient.GetPosts(LoginController.CurrentUserID).OrderByDescending(post => post.DataPostagem),
-            };
+                    return RedirectToAction("Index", "Login");
+                }
 
-            ViewBag.CurrentUserId = LoginController.CurrentUserID;
-            ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
-            ViewBag.Token = ApiClient.Token;
+                HomeViewModel homeViewModel = new()
+                {
+                    Review = new PublishPopupViewModel()
+                    {
+                        Locais = _locais.ToSelectListItem()
+                    },
+                    Posts = _apiClient.GetPosts(LoginController.CurrentUserID).OrderByDescending(post => post.DataPostagem),
+                };
 
-            return View(homeViewModel);
+                ViewBag.CurrentUserId = LoginController.CurrentUserID;
+                ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
+                ViewBag.Token = ApiClient.Token;
+
+                return View(homeViewModel);
+            }
+            catch (Exception exception)
+            {
+                return View("Views/Shared/Error.cshtml", new ErrorViewModel() { Message = exception.Message });
+            }
         }
 
         public IActionResult Publish(HomeViewModel post)
         {
-            if (LoginController.CurrentUserID == -1)
+            try
             {
-                return RedirectToAction("Index", "Login");
-            }
+                if (LoginController.CurrentUserID == -1)
+                {
+                    return RedirectToAction("Index", "Login");
+                }
 
-            post.Posts = _apiClient.GetPosts(LoginController.CurrentUserID);
+                post.Posts = _apiClient.GetPosts(LoginController.CurrentUserID);
 
-            if (!ModelState.IsValid)
-            {
-                return View("Index", post);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return View("Index", post);
+                }
 
-            LocalReadDto selectedLocal = _locais.Single(local => local.Nome == post.Review.SelectedLocalName);
+                LocalReadDto selectedLocal = _locais.Single(local => local.Nome == post.Review.SelectedLocalName);
 
-            PostCreateDto postCreateDto = new()
-            {
-                LocalId = selectedLocal.LocalId,
-                PessoaId = LoginController.CurrentUserID,
-                Conteudo = post.Review.Conteudo!,
-                DataPostagem = DateTimeOffset.Now.DateTime,
-                Avaliacao = post.Review.Avaliacao!.Value
-            };
-
-            try { 
+                PostCreateDto postCreateDto = new()
+                {
+                    LocalId = selectedLocal.LocalId,
+                    PessoaId = LoginController.CurrentUserID,
+                    Conteudo = post.Review.Conteudo!,
+                    DataPostagem = DateTimeOffset.Now.DateTime,
+                    Avaliacao = post.Review.Avaliacao!.Value
+                };
 
                 _apiClient.PostPost(postCreateDto);
 
@@ -72,15 +79,10 @@ namespace Radar.Web.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return View("Views/Shared/Error.cshtml", new ErrorViewModel());
+                return View("Views/Shared/Error.cshtml", new ErrorViewModel() { Message = exception.Message });
             }
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
     }
 }

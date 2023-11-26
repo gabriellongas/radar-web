@@ -65,3 +65,9 @@
     margin-left: 5px;
     box-shadow: none !important;
 }
+
+.field-validation-error {
+    display: block;
+    color: palevioletred;
+    font-size: 14px;
+}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Radar.Web.Api;
+using System.Net;
 
 namespace Radar.Web.Controllers
 {
@@ -41,26 +42,58 @@ namespace Radar.Web.Controllers
                 return View(localViewModel);
 
             }
-            catch (Exception)
+            catch (HttpRequestException exception)
             {
-                return View("Views/Shared/Error.cshtml", new ErrorViewModel());
+                if (exception.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Index", "Login");
+                }
+
+                if (exception.StatusCode == HttpStatusCode.NotFound)
+                {
+                    ModelState.AddModelError("Error", "Local não encontrado");
+                    return RedirectToAction("Index", "Locais", new { id = -1 });
+                }
+
+                ModelState.AddModelError("Error", exception.Message);
+                return RedirectToAction("Index", "Locais", new { id = -1 });
+            }
+            catch (Exception exception)
+            {
+                return View("Views/Shared/Error.cshtml", new ErrorViewModel() { Message = exception.Message});
             }
         }
 
         public IActionResult Select(string selectedLocalName)
         {
-            if (selectedLocalName == null)
+            try
             {
+                if (selectedLocalName == null)
+                {
+                    return RedirectToAction("Index", "Locais", new { id = -1 });
+                }
+
+                if (_locais is null || !_locais.Any())
+                {
+                    return View("Views/Shared/Error.cshtml", new ErrorViewModel());
+                }
+
+                if (!_locais.Any(local => local.Nome == selectedLocalName))
+                {
+                    ModelState.AddModelError("Error", "Local não encontrado");
+                    LocalViewModel localViewModel = new();
+                    localViewModel.Locais = _locais.ToSelectListItem();
+                    return View("Index", localViewModel);
+                }
+
+                int selectedId = _locais.Single(local => local.Nome == selectedLocalName).LocalId;
+                return RedirectToAction("Index", "Locais", new { id = selectedId });
+            }
+            catch (Exception exception)
+            {
+                ModelState.AddModelError("Error", exception.Message);
                 return RedirectToAction("Index", "Locais", new { id = -1 });
             }
-
-            if (_locais is null || !_locais.Any())
-            {
-                return View("Views/Shared/Error.cshtml", new ErrorViewModel());
-            }
-
-            int selectedId = _locais.Single(local => local.Nome == selectedLocalName).LocalId;
-            return RedirectToAction("Index", "Locais", new { id = selectedId });
         }
     }
 }
