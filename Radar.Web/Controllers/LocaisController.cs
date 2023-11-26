@@ -91,7 +91,7 @@ namespace Radar.Web.Controllers
                     ViewBag.CurrentUserId = LoginController.CurrentUserID;
                     ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
                     ViewBag.Token = ApiClient.Token;
-
+                    
                     return View("Index", localViewModel);
                 }
 
