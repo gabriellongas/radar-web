@@ -5,23 +5,29 @@ namespace Radar.Web.Controllers
 {
     public class LocaisController : Controller
     {
-        private readonly ApiClient _apiClient;
+        private IApiClient _apiClient;
+        private IConfiguration _configuration;
         private readonly List<LocalReadDto> _locais;
 
-        public LocaisController()
+        public LocaisController(IApiClient apiClient, IConfiguration configuration)
         {
-            _apiClient = new ApiClient();
-            _locais = _apiClient.GetLocal();
+            _apiClient = apiClient;
+            _configuration = configuration;
+            _locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
         }
 
         public IActionResult Index(int id)
         {
             try
             {
-                if (LoginController.CurrentUserID == -1)
+                if (HttpContext.Session.GetInt32("UserID") == -1)
                 {
                     return RedirectToAction("Index", "Login");
                 }
+
+                ViewBag.CurrentUserId = HttpContext.Session.GetInt32("UserID");
+                ViewBag.Url = $"{_configuration["ApiSettings:ApiURL"]}{ApiClient.CurtidaPath}";
+                ViewBag.Token = HttpContext.Session.GetString("Token");
 
                 LocalViewModel localViewModel = new();
                 localViewModel.Locais = _locais.ToSelectListItem();
@@ -34,9 +40,9 @@ namespace Radar.Web.Controllers
                     return View(localViewModel);
                 }
                 
-                localViewModel.SelectedLocal = _apiClient.GetLocal(id);
+                localViewModel.SelectedLocal = _apiClient.GetLocal(id, HttpContext.Session.GetString("Token"));
                 localViewModel.SelectedLocalName = localViewModel.SelectedLocal.Nome;
-                localViewModel.Posts = _apiClient.GetPostsFromLocal(LoginController.CurrentUserID, id).OrderByDescending(post => post.DataPostagem);
+                localViewModel.Posts = _apiClient.GetPostsFromLocal((int)HttpContext.Session.GetInt32("UserID"), id, HttpContext.Session.GetString("Token")).OrderByDescending(post => post.DataPostagem);
 
                 return View(localViewModel);
 
