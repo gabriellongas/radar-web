@@ -1,14 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Radar.Web.Api;
-using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Radar.Web.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly ApiClient _apiClient = new();
-        internal static int CurrentUserID { get; set; } = -1;
+        private readonly IApiClient _apiClient;
+
+        public LoginController(IApiClient apiClient)
+        {
+                _apiClient = apiClient;
+        }
 
         public IActionResult Index()
         {
@@ -25,13 +29,27 @@ namespace Radar.Web.Controllers
                 }
 
                 string token = _apiClient.SignIn(signIn);
-                CurrentUserID = GetCurrentUserIdFromToken(token);
+                int id = GetCurrentUserIdFromToken(token);
+
+                HttpContext.Session.SetString("Token", token);
+                HttpContext.Session.SetInt32("UserID", id);
 
                 return RedirectToAction("Index", "Home");
             }
             catch (UnauthorizedAccessException)
             {
-                ModelState.AddModelError("Unauthorized", "Usuário ou senha inválidos");
+                ModelState.AddModelError("Error", "Senha inválida");
+                return View("Index", signIn);
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ModelState.AddModelError("Error", "Login não encontrado");
+                    return View("Index", signIn);
+                }
+
+                ModelState.AddModelError("Error", "Ocorreu um erro inesperado");
                 return View("Index", signIn);
             }
             catch (Exception)
@@ -43,7 +61,9 @@ namespace Radar.Web.Controllers
 
         public IActionResult SignOut()
         {
-            CurrentUserID = -1;
+            HttpContext.Session.SetString("Token", "");
+            HttpContext.Session.SetInt32("UserID", -1);
+
             return RedirectToAction("Index", "Login");
         }
 

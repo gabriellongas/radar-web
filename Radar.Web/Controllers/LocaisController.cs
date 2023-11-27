@@ -5,26 +5,32 @@ namespace Radar.Web.Controllers
 {
     public class LocaisController : Controller
     {
-        private readonly ApiClient _apiClient;
-        private readonly List<LocalReadDto> _locais;
+        private IApiClient _apiClient;
+        private IConfiguration _configuration;
 
-        public LocaisController()
+        public LocaisController(IApiClient apiClient, IConfiguration configuration)
         {
-            _apiClient = new ApiClient();
-            _locais = _apiClient.GetLocal();
+            _apiClient = apiClient;
+            _configuration = configuration;
         }
 
         public IActionResult Index(int id)
         {
             try
             {
-                if (LoginController.CurrentUserID == -1)
+                if (HttpContext.Session.GetInt32("UserID") == -1)
                 {
                     return RedirectToAction("Index", "Login");
                 }
 
+                List<LocalReadDto> locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
+
+                ViewBag.CurrentUserId = HttpContext.Session.GetInt32("UserID");
+                ViewBag.Url = $"{_configuration["ApiSettings:ApiURL"]}{ApiClient.CurtidaPath}";
+                ViewBag.Token = HttpContext.Session.GetString("Token");
+
                 LocalViewModel localViewModel = new();
-                localViewModel.Locais = _locais.ToSelectListItem();
+                localViewModel.Locais = locais.ToSelectListItem();
 
                 if (id <= 0)
                 {
@@ -34,9 +40,9 @@ namespace Radar.Web.Controllers
                     return View(localViewModel);
                 }
                 
-                localViewModel.SelectedLocal = _apiClient.GetLocal(id);
+                localViewModel.SelectedLocal = _apiClient.GetLocal(id, HttpContext.Session.GetString("Token"));
                 localViewModel.SelectedLocalName = localViewModel.SelectedLocal.Nome;
-                localViewModel.Posts = _apiClient.GetPostsFromLocal(LoginController.CurrentUserID, id).OrderByDescending(post => post.DataPostagem);
+                localViewModel.Posts = _apiClient.GetPostsFromLocal((int)HttpContext.Session.GetInt32("UserID"), id, HttpContext.Session.GetString("Token")).OrderByDescending(post => post.DataPostagem);
 
                 return View(localViewModel);
 
@@ -54,12 +60,14 @@ namespace Radar.Web.Controllers
                 return RedirectToAction("Index", "Locais", new { id = -1 });
             }
 
-            if (_locais is null || !_locais.Any())
+            List<LocalReadDto> locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
+
+            if (locais is null || !locais.Any())
             {
                 return View("Views/Shared/Error.cshtml", new ErrorViewModel());
             }
 
-            int selectedId = _locais.Single(local => local.Nome == selectedLocalName).LocalId;
+            int selectedId = locais.Single(local => local.Nome == selectedLocalName).LocalId;
             return RedirectToAction("Index", "Locais", new { id = selectedId });
         }
     }

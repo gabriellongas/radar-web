@@ -1,11 +1,27 @@
 global using Radar.Web.Models;
-global using Radar.Web.Models.ViewModels;
 global using Radar.Web.Models.Dto;
+global using Radar.Web.Models.ViewModels;
+using Radar.Web.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddHttpClient("MyClient", client =>
+{
+    var baseUrl = builder.Configuration["ApiSettings:ApiURL"];
+    client.BaseAddress = new Uri(baseUrl);
+});
+
+builder.Services.AddScoped<IApiClient, ApiClient>();
 
 var app = builder.Build();
 
@@ -18,7 +34,7 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();
