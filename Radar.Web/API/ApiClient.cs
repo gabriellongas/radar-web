@@ -158,8 +158,6 @@ namespace Radar.Web.Api
                 HttpResponseMessage response = client.SendAsync(request).Result;
 
                 response.EnsureSuccessStatusCode();
-
-                return true;
             }
             catch (Exception ex)
             {
