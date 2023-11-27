@@ -7,7 +7,6 @@ namespace Radar.Web.Controllers
     {
         private IApiClient _apiClient;
         private IConfiguration _configuration;
-        private List<LocalReadDto> _locais;
 
         public HomeController(IApiClient apiClient, IConfiguration configuration)
         {
@@ -22,13 +21,13 @@ namespace Radar.Web.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            _locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
+            List<LocalReadDto> locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
 
             HomeViewModel homeViewModel = new()
             {
                 Review = new PublishPopupViewModel()
                 {
-                    Locais = _locais.ToSelectListItem()
+                    Locais = locais.ToSelectListItem()
                 },
                 Posts = _apiClient.GetPosts((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token")).OrderByDescending(post => post.DataPostagem),
             };
@@ -48,14 +47,15 @@ namespace Radar.Web.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            post.Posts = _apiClient.GetPosts((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token"));
-
             if (!ModelState.IsValid)
             {
                 return View("Index", post);
             }
 
-            LocalReadDto selectedLocal = _locais.Single(local => local.Nome == post.Review.SelectedLocalName);
+            post.Posts = _apiClient.GetPosts((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token"));
+            
+            List<LocalReadDto> locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
+            LocalReadDto selectedLocal = locais.Single(local => local.Nome == post.Review.SelectedLocalName);
             try
             {
                 PostCreateDto postCreateDto = new()
