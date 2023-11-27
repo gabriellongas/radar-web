@@ -4,6 +4,6 @@ Projeto WEB criado para atender o PBL (Project based Learning) do 8º Semestre d
 
 ## Ambientes
 - Homologação
-  - https://webradar-hml.azurewebsites.net
+  - radar-web-app-hml.azurewebsites.net
 - Produção
-  - https://webradar.azurewebsites.net 
+  - radar-web-app-prod.azurewebsites.net
