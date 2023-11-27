@@ -5,34 +5,41 @@ namespace Radar.Web.Controllers
 {
     public class ProfileController : Controller
     {
-        private readonly ApiClient _apiClient = new ApiClient();
+        private IConfiguration _configuration;
+        private IApiClient _apiClient;
+
+        public ProfileController(IConfiguration configuration, IApiClient apiClient)
+        {
+            _apiClient = apiClient;
+            _configuration = configuration;
+        }
 
         public IActionResult Index(int id)
         {
-            if (LoginController.CurrentUserID == -1)
+            if (HttpContext.Session.GetInt32("UserID") == -1)
             {
                 return RedirectToAction("Index", "Login");
             }
 
-            if (id <= 0) id = LoginController.CurrentUserID;
+            if (id <= 0) id = (int)HttpContext.Session.GetInt32("UserID");
 
             ProfileViewModel profileViewModel = new()
             {
-                Pessoa = _apiClient.GetPessoa(id),
-                Posts = _apiClient.GetPostsFromPessoa(LoginController.CurrentUserID, id).OrderByDescending(post => post.DataPostagem),
-                IsMe = id == LoginController.CurrentUserID
+                Pessoa = _apiClient.GetPessoa(id, HttpContext.Session.GetString("Token")),
+                Posts = _apiClient.GetPostsFromPessoa((int)HttpContext.Session.GetInt32("UserID"), id, HttpContext.Session.GetString("Token")).OrderByDescending(post => post.DataPostagem),
+                IsMe = id == HttpContext.Session.GetInt32("UserID")
             };
 
-            ViewBag.CurrentUserId = LoginController.CurrentUserID;
-            ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
-            ViewBag.Token = ApiClient.Token;
+            ViewBag.CurrentUserId = HttpContext.Session.GetInt32("UserID");
+            ViewBag.Url = $"{_configuration["ApiSettings:ApiURL"]}{ApiClient.CurtidaPath}";
+            ViewBag.Token = HttpContext.Session.GetString("Token");
 
             return View(profileViewModel);
         }
 
         public IActionResult Settings()
         {
-            PessoaReadDto currentMe = _apiClient.GetPessoa(LoginController.CurrentUserID);
+            PessoaReadDto currentMe = _apiClient.GetPessoa((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token"));
             Settings currentSettings = new()
             {
                 Nome = currentMe.Nome,
@@ -55,7 +62,7 @@ namespace Radar.Web.Controllers
 
         public IActionResult Edit(SettingsViewModel newSettings)
         {
-            PessoaReadDto currentMe = _apiClient.GetPessoa(LoginController.CurrentUserID);
+            PessoaReadDto currentMe = _apiClient.GetPessoa((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token"));
 
             if (!ModelState.IsValid)
             {
@@ -77,7 +84,7 @@ namespace Radar.Web.Controllers
 
             try
             {
-                if (!_apiClient.ValidatePassword(signIn))
+                if (!_apiClient.ValidatePassword(signIn, HttpContext.Session.GetString("Token")))
                 {
                     ModelState.AddModelError("Settings.Senha", "Senha incorreta");
 
@@ -92,33 +99,33 @@ namespace Radar.Web.Controllers
 
                 PessoaUpdateDto newMe = new()
                 {
-                    PessoaId = LoginController.CurrentUserID,
+                    PessoaId = (int)HttpContext.Session.GetInt32("UserID"),
                     Nome = newSettings.Settings.Nome,
                     Email = newSettings.Settings.Email,
                     Login = newSettings.Settings.Login,
                     Descricao = newSettings.Settings.Descricao,
                 };
 
-                _apiClient.PutPessoa(newMe);
+                _apiClient.PutPessoa(newMe, HttpContext.Session.GetString("Token"));
 
                 if (!string.IsNullOrWhiteSpace(newSettings.Settings.NewPassword))
                 {
                     UpdatePasswordDto newMePassword = new()
                     {
-                        PessoaId = LoginController.CurrentUserID,
+                        PessoaId = (int)HttpContext.Session.GetInt32("UserID"),
                         NewPassword = newSettings.Settings.NewPassword
                     };
 
-                    _apiClient.UpdatePassword(newMePassword);
+                    _apiClient.UpdatePassword(newMePassword, HttpContext.Session.GetString("Token"));
                 }
 
-                return RedirectToAction("Index", "Profile", new { id = LoginController.CurrentUserID });
+                return RedirectToAction("Index", "Profile", new { id = HttpContext.Session.GetInt32("UserID") });
             }
             catch (Exception)
             {
                 return View("Views/Shared/Error.cshtml", new ErrorViewModel());
             }
-            
+
         }
     }
 }

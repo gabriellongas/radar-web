@@ -6,7 +6,11 @@ namespace Radar.Web.Controllers
 {
     public class CadastroController : Controller
     {
-        private readonly ApiClient _apiClient = new();
+        private IApiClient _apiClient;
+        public CadastroController(IApiClient apiClient)
+        {
+            _apiClient = apiClient;
+        }
         public IActionResult Index()
         {
             return View();
@@ -20,6 +24,11 @@ namespace Radar.Web.Controllers
                 {
                     return View("Views/Cadastro/Index.cshtml", pessoa);
                 }
+
+                _apiClient.PostPessoa(pessoa, HttpContext.Session.GetString("Token"));
+
+                return View("Views/Login/Index.cshtml");
+            }
 
                 _apiClient.PostPessoa(pessoa);
 

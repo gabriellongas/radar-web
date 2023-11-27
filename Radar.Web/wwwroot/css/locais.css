@@ -71,3 +71,17 @@
     color: palevioletred;
     font-size: 14px;
 }
+
+#plots {
+    margin: auto;
+    background-color: #ffff;
+}
+
+.chart {
+    margin-top:10%;
+    margin-left: 5%;
+}
+    .chart h1 {
+        font-size: 20px;
+        margin-left: 30%;
+    }

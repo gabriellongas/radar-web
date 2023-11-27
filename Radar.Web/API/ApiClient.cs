@@ -5,12 +5,14 @@ using System.Text.Json;
 
 namespace Radar.Web.Api
 {
-    public class ApiClient
+    public class ApiClient : IApiClient
     {
-        internal static readonly string Token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW5pc3RyYWRvciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHJhZGFyLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTcwMTA5NjI2MH0.T8cBBxDEFaZ_Jvp9I_WnmGlWbaR3PJ6dJO9xvwsCWBNdt_UzZKLHVO8K8D8bvUwByyh1tI0zrUoBW9yYav6iaw";
-        internal static readonly string Origin = "https://radar-web-api.azurewebsites.net/";
-        private static readonly HttpClient _client = new() { BaseAddress = new Uri(Origin) };
         private static readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
+        private IConfiguration _configuration;
+        public ApiClient(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         #region Path
         internal static readonly string CurtidaPath = "/api/Curtida";
@@ -26,9 +28,11 @@ namespace Radar.Web.Api
         {
             try
             {
+
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 string jsonContent = JsonSerializer.Serialize(signIn.ToSignInDto());
 
-                HttpResponseMessage response = _client.PostAsync(SignInPath, new StringContent(jsonContent, Encoding.UTF8, "application/json")).Result;
+                HttpResponseMessage response = client.PostAsync(SignInPath, new StringContent(jsonContent, Encoding.UTF8, "application/json")).Result;
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                     throw new UnauthorizedAccessException();
@@ -38,6 +42,7 @@ namespace Radar.Web.Api
                 string token = response.Content.ReadAsStringAsync().Result;
 
                 return token;
+
             }
             catch (Exception ex)
             {
@@ -46,15 +51,16 @@ namespace Radar.Web.Api
             }
         }
 
-        public bool ValidatePassword(PessoaLoginDto login)
+        public bool ValidatePassword(PessoaLoginDto login, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Post, $"{PessoaPath}/ValidatePassword");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 request.Content = new StringContent(JsonSerializer.Serialize(login), Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                     throw new UnauthorizedAccessException();
@@ -72,15 +78,16 @@ namespace Radar.Web.Api
             }
         }
 
-        public void UpdatePassword(UpdatePasswordDto updatePassword)
+        public void UpdatePassword(UpdatePasswordDto updatePassword, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Put, $"{PessoaPath}/UpdatePassword");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 request.Content = new StringContent(JsonSerializer.Serialize(updatePassword), Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                     throw new UnauthorizedAccessException();
@@ -95,14 +102,15 @@ namespace Radar.Web.Api
 
         }
 
-        public List<Pessoa> GetPessoa()
+        public List<Pessoa> GetPessoa(string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Get, PessoaPath);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
@@ -116,14 +124,15 @@ namespace Radar.Web.Api
             }
         }
 
-        public PessoaReadDto GetPessoa(int id)
+        public PessoaReadDto GetPessoa(int id, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Get, $"{PessoaPath}/{id}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
@@ -137,34 +146,17 @@ namespace Radar.Web.Api
             }
         }
 
-        public void PostPessoa(PessoaCreateDto pessoa)
+        public void PostPessoa(PessoaCreateDto pessoa, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Post, PessoaPath);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 request.Content = new StringContent(JsonSerializer.Serialize(pessoa), Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
 
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception ex)
-            {
-                File.AppendAllLines("log.txt", new List<string> { ex.Message });
-                throw;
-            }
-        }
-
-        public bool PutPessoa(PessoaUpdateDto pessoa)
-        {
-            try
-            {
-                HttpRequestMessage request = new(HttpMethod.Put, $"{PessoaPath}/{pessoa.PessoaId}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-                request.Content = new StringContent(JsonSerializer.Serialize(pessoa), Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = _client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 return true;
@@ -176,14 +168,36 @@ namespace Radar.Web.Api
             }
         }
 
-        public bool DeletePessoa(int id)
+        public bool PutPessoa(PessoaUpdateDto pessoa, string token)
         {
             try
             {
-                HttpRequestMessage request = new(HttpMethod.Delete, $"{PessoaPath}/{id}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
+                HttpRequestMessage request = new(HttpMethod.Put, $"{PessoaPath}/{pessoa.PessoaId}");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                request.Content = new StringContent(JsonSerializer.Serialize(pessoa), Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
+                response.EnsureSuccessStatusCode();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllLines("log.txt", new List<string> { ex.Message });
+                throw;
+            }
+        }
+
+        public bool DeletePessoa(int id, string token)
+        {
+            try
+            {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
+                HttpRequestMessage request = new(HttpMethod.Delete, $"{PessoaPath}/{id}");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 return true;
@@ -200,14 +214,15 @@ namespace Radar.Web.Api
         #endregion
 
         #region Local
-        public List<LocalReadDto> GetLocal()
+        public List<LocalReadDto> GetLocal(string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Get, LocalPath);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
@@ -220,14 +235,15 @@ namespace Radar.Web.Api
                 throw;
             }
         }
-        public LocalReadDto GetLocal(int id)
+        public LocalReadDto GetLocal(int id, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Get, $"{LocalPath}/{id}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
@@ -243,14 +259,15 @@ namespace Radar.Web.Api
         #endregion
 
         #region Post
-        public List<PostReadDto> GetPosts(int currentUserId)
+        public List<PostReadDto> GetPosts(int currentUserId, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Get, $"{PostPath}/{currentUserId}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
@@ -264,14 +281,15 @@ namespace Radar.Web.Api
             }
         }
 
-        public List<PostReadDto> GetPostsFromPessoa(int currentUserId, int pessoaId)
+        public List<PostReadDto> GetPostsFromPessoa(int currentUserId, int pessoaId, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Get, $"{PostPath}/FromPessoa/{currentUserId}/{pessoaId}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
@@ -285,14 +303,15 @@ namespace Radar.Web.Api
             }
         }
 
-        public List<PostReadDto> GetPostsFromLocal(int currentUserId, int localId)
+        public List<PostReadDto> GetPostsFromLocal(int currentUserId, int localId, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Get, $"{PostPath}/FromLocal/{currentUserId}/{localId}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
@@ -306,14 +325,15 @@ namespace Radar.Web.Api
             }
         }
 
-        public PostReadDto GetPost(int currentUserId, int id)
+        public PostReadDto GetPost(int currentUserId, int id, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Get, $"{PostPath}/{currentUserId}/{id}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 string jsonContent = response.Content.ReadAsStringAsync().Result;
@@ -327,15 +347,16 @@ namespace Radar.Web.Api
             }
         }
 
-        public bool PostPost(PostCreateDto post)
+        public bool PostPost(PostCreateDto post, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Post, PostPath);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 request.Content = new StringContent(JsonSerializer.Serialize(post), Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 return true;
@@ -347,15 +368,16 @@ namespace Radar.Web.Api
             }
         }
 
-        public bool PutPost(Post post)
+        public bool PutPost(Post post, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Put, PostPath);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 request.Content = new StringContent(JsonSerializer.Serialize(post), Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 return true;
@@ -367,14 +389,15 @@ namespace Radar.Web.Api
             }
         }
 
-        public bool DeletePost(int id)
+        public bool DeletePost(int id, string token)
         {
             try
             {
+                HttpClient client = new HttpClient() { BaseAddress = new Uri(_configuration["ApiSettings:ApiURL"]) };
                 HttpRequestMessage request = new(HttpMethod.Delete, $"{PostPath}/{id}");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                HttpResponseMessage response = _client.SendAsync(request).Result;
+                HttpResponseMessage response = client.SendAsync(request).Result;
                 response.EnsureSuccessStatusCode();
 
                 return true;
