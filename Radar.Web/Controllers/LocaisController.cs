@@ -7,7 +7,6 @@ namespace Radar.Web.Controllers
     {
         private IApiClient _apiClient;
         private IConfiguration _configuration;
-        private List<LocalReadDto> _locais;
 
         public LocaisController(IApiClient apiClient, IConfiguration configuration)
         {
@@ -24,14 +23,14 @@ namespace Radar.Web.Controllers
                     return RedirectToAction("Index", "Login");
                 }
 
-                _locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
+                List<LocalReadDto> locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
 
                 ViewBag.CurrentUserId = HttpContext.Session.GetInt32("UserID");
                 ViewBag.Url = $"{_configuration["ApiSettings:ApiURL"]}{ApiClient.CurtidaPath}";
                 ViewBag.Token = HttpContext.Session.GetString("Token");
 
                 LocalViewModel localViewModel = new();
-                localViewModel.Locais = _locais.ToSelectListItem();
+                localViewModel.Locais = locais.ToSelectListItem();
 
                 if (id <= 0)
                 {
@@ -61,12 +60,14 @@ namespace Radar.Web.Controllers
                 return RedirectToAction("Index", "Locais", new { id = -1 });
             }
 
-            if (_locais is null || !_locais.Any())
+            List<LocalReadDto> locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
+
+            if (locais is null || !locais.Any())
             {
                 return View("Views/Shared/Error.cshtml", new ErrorViewModel());
             }
 
-            int selectedId = _locais.Single(local => local.Nome == selectedLocalName).LocalId;
+            int selectedId = locais.Single(local => local.Nome == selectedLocalName).LocalId;
             return RedirectToAction("Index", "Locais", new { id = selectedId });
         }
     }
