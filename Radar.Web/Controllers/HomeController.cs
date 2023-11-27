@@ -18,27 +18,9 @@ namespace Radar.Web.Controllers
 
         public IActionResult Index()
         {
-            if (LoginController.CurrentUserID == -1)
+            if (HttpContext.Session.GetInt32("UserID") == -1)
             {
-                if (HttpContext.Session.GetInt32("UserID")== -1)
-                {
-                    return RedirectToAction("Index", "Login");
-                }
-
-                HomeViewModel homeViewModel = new()
-                {
-                    Review = new PublishPopupViewModel()
-                    {
-                        Locais = _locais.ToSelectListItem()
-                    },
-                    Posts = _apiClient.GetPosts((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token")).OrderByDescending(post => post.DataPostagem),
-                };
-
-                ViewBag.CurrentUserId = HttpContext.Session.GetInt32("UserID");
-                ViewBag.Url = $"{_configuration["ApiSettings:ApiURL"]}{ApiClient.CurtidaPath}";
-                ViewBag.Token = HttpContext.Session.GetString("Token");
-
-                return View(homeViewModel);
+                return RedirectToAction("Index", "Login");
             }
 
             HomeViewModel homeViewModel = new()
@@ -47,26 +29,25 @@ namespace Radar.Web.Controllers
                 {
                     Locais = _locais.ToSelectListItem()
                 },
-                Posts = _apiClient.GetPosts(LoginController.CurrentUserID).OrderByDescending(post => post.DataPostagem),
+                Posts = _apiClient.GetPosts((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token")).OrderByDescending(post => post.DataPostagem),
             };
 
-            ViewBag.CurrentUserId = LoginController.CurrentUserID;
-            ViewBag.Url = $"{ApiClient.Origin}{ApiClient.CurtidaPath}";
-            ViewBag.Token = ApiClient.Token;
+            ViewBag.CurrentUserId = HttpContext.Session.GetInt32("UserID");
+            ViewBag.Url = $"{_configuration["ApiSettings:ApiURL"]}{ApiClient.CurtidaPath}";
+            ViewBag.Token = HttpContext.Session.GetString("Token");
 
             return View(homeViewModel);
         }
 
         public IActionResult Publish(HomeViewModel post)
         {
-            if (LoginController.CurrentUserID == -1)
-            {
-                if (HttpContext.Session.GetInt32("UserID") == -1)
-                {
-                    return RedirectToAction("Index", "Login");
-                }
 
-                post.Posts = _apiClient.GetPosts((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token"));
+            if (HttpContext.Session.GetInt32("UserID") == -1)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            post.Posts = _apiClient.GetPosts((int)HttpContext.Session.GetInt32("UserID"), HttpContext.Session.GetString("Token"));
 
             if (!ModelState.IsValid)
             {
@@ -74,7 +55,8 @@ namespace Radar.Web.Controllers
             }
 
             LocalReadDto selectedLocal = _locais.Single(local => local.Nome == post.Review.SelectedLocalName);
-
+            try
+            {
                 PostCreateDto postCreateDto = new()
                 {
                     LocalId = selectedLocal.LocalId,
