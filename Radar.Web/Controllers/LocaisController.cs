@@ -7,13 +7,12 @@ namespace Radar.Web.Controllers
     {
         private IApiClient _apiClient;
         private IConfiguration _configuration;
-        private readonly List<LocalReadDto> _locais;
+        private List<LocalReadDto> _locais;
 
         public LocaisController(IApiClient apiClient, IConfiguration configuration)
         {
             _apiClient = apiClient;
             _configuration = configuration;
-            _locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
         }
 
         public IActionResult Index(int id)
@@ -24,6 +23,8 @@ namespace Radar.Web.Controllers
                 {
                     return RedirectToAction("Index", "Login");
                 }
+
+                _locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
 
                 ViewBag.CurrentUserId = HttpContext.Session.GetInt32("UserID");
                 ViewBag.Url = $"{_configuration["ApiSettings:ApiURL"]}{ApiClient.CurtidaPath}";

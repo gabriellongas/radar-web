@@ -7,12 +7,11 @@ namespace Radar.Web.Controllers
     {
         private IApiClient _apiClient;
         private IConfiguration _configuration;
-        private readonly List<LocalReadDto> _locais;
+        private List<LocalReadDto> _locais;
 
         public HomeController(IApiClient apiClient, IConfiguration configuration)
         {
             _apiClient = apiClient;
-            _locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
             _configuration = configuration;
         }
 
@@ -22,6 +21,8 @@ namespace Radar.Web.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
+
+            _locais = _apiClient.GetLocal(HttpContext.Session.GetString("Token"));
 
             HomeViewModel homeViewModel = new()
             {
