@@ -21,7 +21,7 @@ builder.Services.AddHttpClient("MyClient", client =>
     client.BaseAddress = new Uri(baseUrl);
 });
 
-builder.Services.AddScoped<IApiClient, IApiClient>();
+builder.Services.AddScoped<IApiClient, ApiClient>();
 
 var app = builder.Build();
 
