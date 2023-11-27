@@ -1,7 +1,7 @@
 global using Radar.Web.Models;
-global using Radar.Web.Models.ViewModels;
 global using Radar.Web.Models.Dto;
-using Radar.Web.API.Interface;
+global using Radar.Web.Models.ViewModels;
+using Radar.Web.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 

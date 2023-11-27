@@ -29,11 +29,6 @@ namespace Radar.Web.Controllers
 
                 return View("Views/Login/Index.cshtml");
             }
-
-                _apiClient.PostPessoa(pessoa);
-
-                return View("Views/Login/Index.cshtml");
-            }
             catch (HttpRequestException exception)
             {
                 if (exception.StatusCode == HttpStatusCode.Conflict)
