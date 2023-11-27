@@ -37,7 +37,18 @@ namespace Radar.Web.Controllers
             }
             catch (UnauthorizedAccessException)
             {
-                ModelState.AddModelError("Unauthorized", "Usuário ou senha inválidos");
+                ModelState.AddModelError("Error", "Senha inválida");
+                return View("Index", signIn);
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ModelState.AddModelError("Error", "Login não encontrado");
+                    return View("Index", signIn);
+                }
+
+                ModelState.AddModelError("Error", "Ocorreu um erro inesperado");
                 return View("Index", signIn);
             }
             catch (Exception)
